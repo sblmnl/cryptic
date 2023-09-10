@@ -3,19 +3,14 @@ using System.Data;
 
 namespace Cryptic.WebAPI;
 
-public class DbConnectionFactory
+public static class DbConnectionFactory
 {
-    private readonly string _connectionString;
-
-    public DbConnectionFactory(string connectionString)
+    public static async Task<IDbConnection> NewConnectionAsync(
+        string connectionString,
+        CancellationToken cancellationToken)
     {
-        _connectionString = connectionString;
-    }
-
-    public async Task<IDbConnection> NewConnectionAsync()
-    {
-        var conn = new NpgsqlConnection(_connectionString);
-        await conn.OpenAsync();
+        var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync(cancellationToken);
 
         return conn;
     }

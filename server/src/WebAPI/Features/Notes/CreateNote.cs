@@ -10,9 +10,9 @@ public static class CreateNote
 
     public static void Map(
         WebApplication app,
-        DbConnectionFactory dbConnectionFactory)
+        string dbConnectionString)
     {
-        app.MapPost("/notes", async (Request request) =>
+        app.MapPost("/notes", async (HttpContext httpContext, Request request) =>
         {
             if (!DeleteAfter.TryFromShorthand(request.DeleteAfter, out var deleteAfter))
             {
@@ -21,7 +21,7 @@ public static class CreateNote
 
             var note = Note.New(request.Content, deleteAfter);
 
-            using var db = await dbConnectionFactory.NewConnectionAsync();
+            using var db = await DbConnectionFactory.NewConnectionAsync(dbConnectionString, httpContext.RequestAborted);
 
             await db.ExecuteAsync(
                 "INSERT INTO notes (id, content, delete_after, created_at) " + 
