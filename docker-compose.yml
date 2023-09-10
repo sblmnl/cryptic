@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    ports: 
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./.docker/db/:/var/lib/postgresql/data/
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  webapi:
+    container_name: webapi
+    build:
+      context: ./server/src/WebAPI
+      dockerfile: ./Dockerfile
+    environment:
+      - ConnectionStrings__Postgres=User ID=${DB_USER};Password=${DB_PASSWORD};Server=db;Port=5432;Database=${DB_NAME};Integrated Security=true;Pooling=true
+    ports:
+      - 8080:80
+      - 8443:443
+    depends_on:
+      - db
