@@ -9,5 +9,6 @@ public static class Routing
         string dbConnectionString)
     {
         CreateNote.Map(app, dbConnectionString);
+        ReadNote.Map(app, dbConnectionString);
     }
 }
