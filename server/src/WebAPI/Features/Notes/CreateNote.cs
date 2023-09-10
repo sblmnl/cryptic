@@ -6,7 +6,7 @@ public static class CreateNote
 {
     public record Request(
         string Content,
-        string DeleteAfter);
+        DeleteAfter DeleteAfter);
 
     public static void Map(
         WebApplication app,
@@ -14,12 +14,7 @@ public static class CreateNote
     {
         app.MapPost("/notes", async (HttpContext httpContext, Request request) =>
         {
-            if (!DeleteAfter.TryFromShorthand(request.DeleteAfter, out var deleteAfter))
-            {
-                return Results.BadRequest($"Unknown {nameof(DeleteAfter)} shorthand!");
-            }
-
-            var note = Note.New(request.Content, deleteAfter);
+            var note = Note.New(request.Content, request.DeleteAfter);
 
             using var db = await DbConnectionFactory.NewConnectionAsync(dbConnectionString, httpContext.RequestAborted);
 
@@ -29,7 +24,7 @@ public static class CreateNote
                 new {
                     Id = note.Id.Value,
                     Content = note.Content,
-                    DeleteAfter = note.DeleteAfter.Shorthand,
+                    DeleteAfter = note.DeleteAfter,
                     CreatedAt = note.CreatedAt
                 });
 

@@ -15,65 +15,31 @@ public record NoteId
     }
 
     public static NoteId New() => new();
+    public static NoteId From(Guid value) => new(value);
 }
 
-public record DeleteAfter
+public enum DeleteAfter
 {
-    public string Text { get; }
-    public string Shorthand { get; }
+    Reading,
+    ReadingNoWarning,
+    OneHour,
+    OneDay,
+    SevenDays,
+    ThirtyDays
+}
 
-    private DeleteAfter(
-        string text,
-        string shorthand)
+public static class DeleteAfterExtensions
+{
+    public static TimeSpan ToTimeSpan(this DeleteAfter deleteAfter)
     {
-        Text = text;
-        Shorthand = shorthand;
-    }
-
-    public static DeleteAfter Reading =>
-        new("Reading", "r");
-
-    public static DeleteAfter ReadingNoWarning =>
-        new("Reading with no warning", "r-nw");
-
-    public static DeleteAfter OneHour =>
-        new("1 hour", "1hr");
-
-    public static DeleteAfter OneDay =>
-        new("1 day", "1d");
-
-    public static DeleteAfter SevenDays =>
-        new("7 days", "7d");
-
-    public static DeleteAfter ThirtyDays =>
-        new("30 days", "30d");
-
-    public static bool TryFromShorthand(string shorthand, out DeleteAfter deleteAfter)
-    {
-        switch (shorthand.ToLower())
+        return deleteAfter switch
         {
-            case "r":
-                deleteAfter = Reading;
-                return true;
-            case "r-nw":
-                deleteAfter = ReadingNoWarning;
-                return true;
-            case "1hr":
-                deleteAfter = OneHour;
-                return true;
-            case "1d":
-                deleteAfter = OneDay;
-                return true;
-            case "7d":
-                deleteAfter = SevenDays;
-                return true;
-            case "30d":
-                deleteAfter = ThirtyDays;
-                return true;
-        }
-
-        deleteAfter = default!;
-        return false;
+              DeleteAfter.OneHour => TimeSpan.FromHours(1),
+              DeleteAfter.OneDay => TimeSpan.FromDays(1),
+              DeleteAfter.SevenDays => TimeSpan.FromDays(7),
+              DeleteAfter.ThirtyDays => TimeSpan.FromDays(30),
+            _ => TimeSpan.MinValue
+        };
     }
 }
 
@@ -84,6 +50,9 @@ public class Note
     public DeleteAfter DeleteAfter { get; }
     public DateTimeOffset CreatedAt { get; }
 
+    public bool DeleteAfterReading => DeleteAfter == DeleteAfter.Reading || DeleteAfter == DeleteAfter.ReadingNoWarning;
+    public bool IsToBeDeleted => !DeleteAfterReading && DateTimeOffset.UtcNow >= CreatedAt + DeleteAfter.ToTimeSpan();
+    
     private Note(
         NoteId id,
         string content,
