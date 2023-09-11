@@ -21,14 +21,9 @@ public static class CreateNote
             await db.ExecuteAsync(
                 "INSERT INTO notes (id, content, delete_after, created_at) " + 
                 "VALUES (@Id, @Content, @DeleteAfter, @CreatedAt);",
-                new {
-                    Id = note.Id.Value,
-                    Content = note.Content,
-                    DeleteAfter = note.DeleteAfter,
-                    CreatedAt = note.CreatedAt
-                });
+                note);
 
-            return Results.Ok(note.Id.Value);
+            return Results.Ok(note.Id);
         });
     }
 }

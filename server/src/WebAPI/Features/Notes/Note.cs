@@ -1,23 +1,5 @@
 namespace Cryptic.WebAPI.Features.Notes;
 
-public record NoteId
-{
-    public Guid Value { get; }
-
-    private NoteId(Guid value)
-    {
-        Value = value;
-    }
-
-    private NoteId()
-    {
-        Value = Guid.NewGuid();
-    }
-
-    public static NoteId New() => new();
-    public static NoteId From(Guid value) => new(value);
-}
-
 public enum DeleteAfter
 {
     Reading,
@@ -45,7 +27,7 @@ public static class DeleteAfterExtensions
 
 public class Note
 {
-    public NoteId Id { get; }
+    public Guid Id { get; }
     public string Content { get; }
     public DeleteAfter DeleteAfter { get; }
     public DateTimeOffset CreatedAt { get; }
@@ -54,7 +36,7 @@ public class Note
     public bool IsToBeDeleted => !DeleteAfterReading && DateTimeOffset.UtcNow >= CreatedAt + DeleteAfter.ToTimeSpan();
     
     private Note(
-        NoteId id,
+        Guid id,
         string content,
         DeleteAfter deleteAfter,
         DateTimeOffset createdAt)
@@ -69,11 +51,13 @@ public class Note
         string content,
         DeleteAfter deleteAfter)
     {
-        Id = NoteId.New();
+        Id = Guid.NewGuid();
         Content = content;
         DeleteAfter = deleteAfter;
         CreatedAt = DateTimeOffset.UtcNow;
     }
+
+    private Note() {}
 
     public static Note New(
         string content,
