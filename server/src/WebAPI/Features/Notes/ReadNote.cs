@@ -13,7 +13,7 @@ public static class ReadNote
             using var db = await DbConnectionFactory.NewConnectionAsync(dbConnectionString, httpContext.RequestAborted);
 
             var note = await db.QueryFirstOrDefaultAsync<Note>(
-                "SELECT * FROM notes WHERE Id = @Id",
+                "SELECT * FROM notes WHERE id = @Id",
                 new
                 {
                     Id = noteId
@@ -23,10 +23,11 @@ public static class ReadNote
             {
                 return Results.NotFound("That note doesn't exist!");
             }
+
             if (note.IsToBeDeleted)
             {
                 await db.ExecuteAsync(
-                    "DELETE FROM notes WHERE Id = @Id",
+                    "DELETE FROM notes WHERE id = @Id",
                     new
                     {
                         Id = noteId
@@ -35,17 +36,25 @@ public static class ReadNote
                 return Results.NotFound("That note doesn't exist!");
             }
 
+            if (note.DeleteAfter == DeleteAfter.Reading
+                && !httpContext.Request.Query.ContainsKey("acknowledgeWarning"))
+            {
+                return Results.BadRequest(
+                    "This note is set to delete after reading it. " + 
+                    "In order to read this note, you must add the \"acknowledgeWarning\" query parameter to the request.");
+            }
+
             if (note.DeleteAfterReading)
             {
                 await db.ExecuteAsync(
-                    "DELETE FROM notes WHERE Id = @Id",
+                    "DELETE FROM notes WHERE id = @Id",
                     new
                     {
                         Id = noteId
                     });
             }
 
-            return Results.Ok(note);
+            return Results.Ok(note.Content);
         });
     }
 }
