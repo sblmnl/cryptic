@@ -14,5 +14,5 @@ export DB_USER=root
 export DB_PASSWORD=password
 
 # start the containers
-docker-compose up
+docker compose up
 ```
