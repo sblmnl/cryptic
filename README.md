@@ -2,17 +2,24 @@
 
 Utility for securely sharing notes over the web
 
-# Getting Started
+## Getting Started
 
-```sh
-# create the volume storage directory
-mkdir .docker
+### Development Environment Setup
 
-# set the env variables
-export DB_NAME=cryptic
-export DB_USER=root
-export DB_PASSWORD=password
+Run `./init.sh` (Mac/Linux) or `./init.ps1` (Windows).
 
-# start the containers
-docker compose up
-```
+### Running the Application
+
+#### Docker Profiles
+
+**Full Stack (full)**  
+Runs the full stack application and all infrastructure services.
+
+Command:  
+`docker compose --profile full up`  
+
+**Infrastructure Only (infra)**  
+Only runs the infrastructure services (i.e. Postgres). This is useful during development, when you might want to be able to run the front-end or back-end from your IDE.
+
+Command:  
+`docker compose --profile infra up`

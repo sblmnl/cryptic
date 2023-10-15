@@ -1,26 +1,28 @@
 services:
   db:
     image: postgres:latest
-    container_name: db
-    ports: 
-      - 5432:5432
+    container_name: cryptic-db
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
-    volumes:
-      - ./.docker/db/:/var/lib/postgresql/data/
-      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports: 
+      - 5432:5432
+    profiles:
+      - infra
+      - full
 
   webapi:
-    container_name: webapi
     build:
-      context: ./server/src/WebAPI
+      context: ./src/WebAPI
       dockerfile: ./Dockerfile
+    container_name: cryptic-webapi
     environment:
-      - ConnectionStrings__Postgres=User ID=${DB_USER};Password=${DB_PASSWORD};Server=db;Port=5432;Database=${DB_NAME};Integrated Security=true;Pooling=true
+      - ConnectionStrings__Postgres=Server=db;Port=5432;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD}
     ports:
       - 8080:80
       - 8443:443
     depends_on:
       - db
+    profiles:
+      - full
