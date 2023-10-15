@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace WebAPI.Features.Notes;
 
 public class DeleteAfterNotFoundException : Exception
