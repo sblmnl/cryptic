@@ -1,5 +1,10 @@
 namespace WebAPI;
 
+public interface IEndpoint
+{
+    public void Map(WebApplication app);
+}
+
 public static class Routing
 {
     public static void MapEndpoints(this WebApplication app)
