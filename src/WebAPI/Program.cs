@@ -15,6 +15,12 @@ builder.Services.AddScoped<INoteRepository, NoteRepository>();
 var app = builder.Build();
 
 app.MigrateDatabase();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.MapEndpoints();
 
 app.Run();
