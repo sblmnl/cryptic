@@ -23,11 +23,11 @@ services:
       dockerfile: ./Dockerfile
     container_name: cryptic-webapi
     volumes:
-      - ~/.aspnet/https:/https:ro
+      - ~/.aspnet/https:${CERT_DIR}:ro
     environment:
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=${CERT_PATH}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=${CERT_DIR}/${CERT_FILE}
       - ConnectionStrings__Postgres=Server=db;Port=5432;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD}
     ports:
       - 8080:80

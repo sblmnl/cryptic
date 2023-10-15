@@ -13,5 +13,6 @@ DB_PASSWORD=password
 
 # ssl/tls
 CERT_PASSWORD=password
-CERT_PATH=/https/cryptic.pfx
+CERT_DIR=/https
+CERT_FILE=cryptic.pfx
 EOF
