@@ -15,10 +15,10 @@ public record NoteId(Guid Value)
 
 public class Note
 {
-    public NoteId Id { get; init; } = NoteId.New();
+    public NoteId Id { get; } = NoteId.New();
     public required string Content { get; init; }
     public required DeleteAfter DeleteAfter { get; init; }
-    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset CreatedAt { get; } = DateTimeOffset.UtcNow;
     
     public bool ShouldBeDeleted() => DeleteAfter != DeleteAfter.Reading
                              && DeleteAfter != DeleteAfter.ReadingNoWarning

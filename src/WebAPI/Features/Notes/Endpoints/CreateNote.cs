@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPI.Features.Notes;
+namespace WebAPI.Features.Notes.Endpoints;
 
 public static class CreateNote
 {

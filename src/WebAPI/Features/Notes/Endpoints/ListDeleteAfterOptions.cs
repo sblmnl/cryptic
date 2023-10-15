@@ -1,4 +1,4 @@
-namespace WebAPI.Features.Notes;
+namespace WebAPI.Features.Notes.Endpoints;
 
 public static class ListDeleteAfterOptions
 {
