@@ -1,0 +1,13 @@
+# ide configuration
+**/.vscode
+**/.idea
+
+# docker data
+**/.docker
+
+# build artifacts
+**/obj
+**/bin
+
+# secrets
+**/.env

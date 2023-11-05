@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: cryptic-db
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports: 
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USER} -d ${DB_NAME}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    profiles:
+      - infra
+      - full
+
+  webapi:
+    build:
+      context: ./src/WebAPI
+      dockerfile: ./Dockerfile
+    container_name: cryptic-webapi
+    volumes:
+      - ~/.aspnet/https:${CERT_DIR}:ro
+    environment:
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=${CERT_DIR}/${CERT_FILE}
+      - ConnectionStrings__Postgres=Server=db;Port=5432;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD}
+    ports:
+      - 8080:80
+      - 8443:443
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+      - full
