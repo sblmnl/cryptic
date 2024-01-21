@@ -12,7 +12,7 @@ using WebAPI;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230927015530_InitialDbCreation")]
+    [Migration("20240115172831_InitialDbCreation")]
     partial class InitialDbCreation
     {
         /// <inheritdoc />
@@ -25,9 +25,10 @@ namespace WebAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebAPI.Features.Notes.Note", b =>
+            modelBuilder.Entity("WebAPI.Features.Notes.Storage+Note", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -36,14 +37,13 @@ namespace WebAPI.Migrations
                         .HasColumnType("text")
                         .HasColumnName("content");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTimeOffset?>("DeleteAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
+                        .HasColumnName("delete_at");
 
-                    b.Property<string>("DeleteAfter")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("delete_after");
+                    b.Property<bool>("DoNotWarn")
+                        .HasColumnType("boolean")
+                        .HasColumnName("do_not_warn");
 
                     b.HasKey("Id")
                         .HasName("pk_notes");

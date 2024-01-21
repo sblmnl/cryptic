@@ -17,8 +17,8 @@ namespace WebAPI.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     content = table.Column<string>(type: "text", nullable: false),
-                    delete_after = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    do_not_warn = table.Column<bool>(type: "boolean", nullable: false),
+                    delete_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {

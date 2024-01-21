@@ -4,16 +4,9 @@ using WebAPI.Features.Notes;
 
 namespace WebAPI;
 
-public interface IAppDbContext
+public class AppDbContext : DbContext
 {
-    public DbSet<Note> Notes { get; }
-    
-    public Task<int> SaveChangesAsync(CancellationToken ct);
-}
-
-public class AppDbContext : DbContext, IAppDbContext
-{
-    public required DbSet<Note> Notes { get; init; }
+    public required DbSet<Storage.Note> Notes { get; init; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -27,10 +20,16 @@ public class AppDbContext : DbContext, IAppDbContext
 
 public static class DatabaseSetup
 {
-    public static void MigrateDatabase(this WebApplication app)
+    public static void MigrateDatabase(IServiceProvider serviceProvider)
     {
-        using var scope = app.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.Migrate();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        if (dbContext is null)
+        {
+            throw new ApplicationException($"Unable to resolve type {nameof(AppDbContext)} from services!");
+        }
+        
+        dbContext.Database.Migrate();
     }
 }
