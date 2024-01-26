@@ -20,15 +20,10 @@ public class AppDbContext : DbContext
 
 public static class DatabaseSetup
 {
-    public static void MigrateDatabase(IServiceProvider serviceProvider)
+    public static void MigrateDatabase(this WebApplication app)
     {
-        using var scope = serviceProvider.CreateScope();
+        using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        if (dbContext is null)
-        {
-            throw new ApplicationException($"Unable to resolve type {nameof(AppDbContext)} from services!");
-        }
         
         dbContext.Database.Migrate();
     }
