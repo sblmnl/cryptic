@@ -2,12 +2,10 @@
 **/.vscode
 **/.idea
 
-# docker data
-**/.docker
-
 # build artifacts
 **/obj
 **/bin
 
-# secrets
+# secrets/dev environment
 **/.env
+pgadmin.json

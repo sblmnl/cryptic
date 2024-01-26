@@ -13,9 +13,28 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
+    volumes:
+      - cryptic-db:/var/lib/postgresql/data/
     profiles:
-      - infra
-      - full
+      - dev
+      - prod
+      
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: cryptic-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_USER}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+    ports:
+      - 5050:80
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - cryptic-pgadmin:/var/lib/pgadmin
+      - ./pgadmin.json:/pgadmin4/servers.json:ro
+    profiles:
+      - dev
 
   webapi:
     build:
@@ -36,4 +55,8 @@ services:
       db:
         condition: service_healthy
     profiles:
-      - full
+      - prod
+  
+volumes:
+  cryptic-db:
+  cryptic-pgadmin:

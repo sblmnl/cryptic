@@ -12,14 +12,14 @@ Run `./init.sh` (Mac/Linux) or `./init.ps1` (Windows).
 
 #### Docker Profiles
 
-**Full Stack (full)**  
-Runs the full stack application and all infrastructure services.
+**Production (prod)**  
+Runs the full stack application and all necessary services.
 
 Command:  
-`docker compose --profile full up`  
+`docker compose --profile prod up`  
 
-**Infrastructure Only (infra)**  
-Only runs the infrastructure services (i.e. Postgres). This is useful during development, when you might want to be able to run the front-end or back-end from your IDE.
+**Development (dev)**  
+Only runs the development services (Postgres and pgAdmin). This is when you might want to be able to debug the app in your IDE.
 
 Command:  
-`docker compose --profile infra up`
+`docker compose --profile dev up`
