@@ -2,9 +2,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Features.Notes;
 
-public static class Converters
+public static class Storage
 {
-    public static Storage.Note ToStorageType(this Domain.Note note)
+    public record Note(
+        Guid Id,
+        string Content,
+        bool DoNotWarn,
+        DateTimeOffset? DeleteAt);
+    
+    public static Domain.Note ToDomainType(this Note note)
+    {
+        return new(
+            note.Id,
+            note.Content,
+            Domain.DeleteAfter.From(note.DeleteAt, note.DoNotWarn));
+    }
+    
+    public static Note ToStorageType(this Domain.Note note)
     {
         DateTimeOffset? deleteAt = note.DeleteAfter switch
         {
@@ -24,23 +38,6 @@ public static class Converters
             doNotWarn,
             deleteAt);
     }
-
-    public static Domain.Note ToDomainType(this Storage.Note note)
-    {
-        return new(
-            note.Id,
-            note.Content,
-            Domain.DeleteAfter.From(note.DeleteAt, note.DoNotWarn));
-    }
-}
-
-public static class Storage
-{
-    public record Note(
-        Guid Id,
-        string Content,
-        bool DoNotWarn,
-        DateTimeOffset? DeleteAt);
     
     public class NoteRepository
     {
@@ -68,13 +65,8 @@ public static class Storage
         {
             var note = (await _db.Notes.FirstOrDefaultAsync(x => x.Id == noteId, ct))?.ToDomainType();
 
-            if (note is null)
-            {
-                return null;
-            }
-
-            if (note.DeleteAfter is Domain.DeleteAfter.Time deleteAfterTime
-                && deleteAfterTime.DeleteAt < DateTimeOffset.UtcNow)
+            if (note?.DeleteAfter is Domain.DeleteAfter.Time deleteAfter
+                && deleteAfter.DeleteAt < DateTimeOffset.UtcNow)
             {
                 await RemoveNoteAsync(note, ct);
                 return null;

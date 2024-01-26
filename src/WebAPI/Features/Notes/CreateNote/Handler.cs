@@ -5,7 +5,7 @@ public static class HttpErrors
     public static readonly IResult DeleteAfterAlreadyPassed = Results.BadRequest(
         "The provided date and time to delete the note has already passed!");
 }
-    
+
 public record Request(
     string Content,
     DateTimeOffset? DeleteAt,
@@ -14,8 +14,8 @@ public record Request(
 public static class HttpHandler
 {
     public static readonly Delegate Handler = async (
-        [FromServices] Storage.NoteRepository noteRepository,
         Request req,
+        Storage.NoteRepository noteRepository,
         HttpContext ctx) =>
     {
         var deleteAfter = Domain.DeleteAfter.From(req.DeleteAt, req.DoNotWarn);
