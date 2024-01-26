@@ -17,7 +17,7 @@ builder.Services.AddNotes();
 
 var app = builder.Build();
 
-DatabaseSetup.MigrateDatabase(app.Services);
+app.MigrateDatabase();
 
 if (app.Environment.IsDevelopment())
 {
