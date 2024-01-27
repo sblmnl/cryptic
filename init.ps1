@@ -1,7 +1,11 @@
-$DEFAULT_PASSWORD="password"
+$DEFAULT_PASSWORD = "password"
+$CERT_FILE = "cryptic.pfx"
 
-# generate the ssl/tls dev cert
-dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\cryptic.pfx -p $DEFAULT_PASSWORD
+# generate the https certificate
+if (!(Test-Path -Path "$env:USERPROFILE\.aspnet\https\$CERT_FILE")) {
+    dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\$CERT_FILE -p $DEFAULT_PASSWORD
+}
+
 dotnet dev-certs https --trust
 
 # populate the .env file
@@ -11,29 +15,11 @@ DB_NAME=cryptic
 DB_USER=postgres
 DB_PASSWORD=$DEFAULT_PASSWORD
 
-# ssl/tls
+# https
+CERT_FILE=$CERT_FILE
 CERT_PASSWORD=$DEFAULT_PASSWORD
-CERT_DIR=/https
-CERT_FILE=cryptic.pfx
 
-# pgadmin
-PGADMIN_USER=admin@pgadmin.org
-PGADMIN_PASSWORD=$DEFAULT_PASSWORD
-"@ -Force
-
-# populate the pgAdmin servers file
-New-Item -Path "pgadmin.json" -ItemType "File" -Value @"
-{
-    "Servers": {
-        "1": {
-            "Name": "cryptic",
-            "Group": "Servers",
-            "Port": 5432,
-            "Username": "postgres",
-            "Host": "cryptic-db",
-            "SSLMode": "prefer",
-            "MaintenanceDB": "postgres"
-        }
-    }
-}
+# ports
+WEBAPI_HTTPS_PORT=8443
+WEBAPI_HTTP_PORT=8080
 "@ -Force

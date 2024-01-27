@@ -6,6 +6,9 @@
 **/obj
 **/bin
 
-# secrets/dev environment
+# development environment
 **/.env
-pgadmin.json
+**/.crt
+**/.key
+**/.pfx
+localhost.conf
