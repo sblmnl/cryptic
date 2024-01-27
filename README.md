@@ -16,7 +16,7 @@ Run `./init.sh` (Mac/Linux) or `./init.ps1` (Windows).
 Only runs the infrastructure services. This allows the application to be run locally and debugged in your IDE.
 
 Command:  
-`docker compose up`
+`docker compose up`  
 
 **Full Stack (full)**  
 Runs the full stack application and all necessary services.

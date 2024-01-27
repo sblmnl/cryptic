@@ -28,6 +28,7 @@ services:
     volumes:
       - ~/.aspnet/https/${CERT_FILE}:/https/${CERT_FILE}:ro
     environment:
+      - ASPNETCORE_HTTP_PORTS=${WEBAPI_HTTP_PORT}
       - ASPNETCORE_HTTPS_PORTS=${WEBAPI_HTTPS_PORT}
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/${CERT_FILE}
