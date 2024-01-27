@@ -11,6 +11,11 @@ public record Request(
     DateTimeOffset? DeleteAt,
     bool DoNotWarn);
 
+public record Response(
+    Guid Id,
+    DateTimeOffset? DeleteAt,
+    bool DoNotWarn);
+
 public static class HttpHandler
 {
     public static readonly Delegate Handler = async (
@@ -33,6 +38,8 @@ public static class HttpHandler
 
         await noteRepository.AddNoteAsync(note, ctx.RequestAborted);
 
-        return Results.Ok(note.Id);
+        return Results.Created(
+            new Uri(note.Id.ToString(), UriKind.Relative), 
+            new Response(note.Id, req.DeleteAt, req.DoNotWarn));
     };
 }
