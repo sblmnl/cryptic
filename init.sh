@@ -59,6 +59,9 @@ fi
 
 # populate the .env file
 cat <<EOF > .env
+# app
+APP_ENVIRONMENT=Development
+
 # database
 DB_NAME=cryptic
 DB_USER=postgres

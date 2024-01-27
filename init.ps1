@@ -10,6 +10,9 @@ dotnet dev-certs https --trust
 
 # populate the .env file
 New-Item -Path ".env" -Value @"
+# app
+APP_ENVIRONMENT=Development
+
 # database
 DB_NAME=cryptic
 DB_USER=postgres
