@@ -19,14 +19,12 @@ var app = builder.Build();
 
 app.MigrateDatabase();
 
+app.UseHttpsRedirection();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-else
-{
-    app.UseHttpsRedirection();
 }
 
 app.UseNotes();
