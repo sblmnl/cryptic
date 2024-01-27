@@ -1,16 +1,28 @@
-# generate the ssl/tls dev cert
-dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\cryptic.pfx -p password
+$DEFAULT_PASSWORD = "password"
+$CERT_FILE = "cryptic.pfx"
+
+# generate the https certificate
+if (!(Test-Path -Path "$env:USERPROFILE\.aspnet\https\$CERT_FILE")) {
+    dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\$CERT_FILE -p $DEFAULT_PASSWORD
+}
+
 dotnet dev-certs https --trust
 
 # populate the .env file
-Add-Content -Path ".env" -Value @"
+New-Item -Path ".env" -Value @"
+# app
+APP_ENVIRONMENT=Development
+
 # database
 DB_NAME=cryptic
 DB_USER=postgres
-DB_PASSWORD=password
+DB_PASSWORD=$DEFAULT_PASSWORD
 
-# ssl/tls
-CERT_PASSWORD=password
-CERT_DIR=/https
-CERT_FILE=cryptic.pfx
-"@
+# https
+CERT_FILE=$CERT_FILE
+CERT_PASSWORD=$DEFAULT_PASSWORD
+
+# ports
+WEBAPI_HTTPS_PORT=8443
+WEBAPI_HTTP_PORT=8080
+"@ -Force

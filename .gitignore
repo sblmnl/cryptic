@@ -2,12 +2,13 @@
 **/.vscode
 **/.idea
 
-# docker data
-**/.docker
-
 # build artifacts
 **/obj
 **/bin
 
-# secrets
+# development environment
 **/.env
+**/.crt
+**/.key
+**/.pfx
+localhost.conf

@@ -4,23 +4,29 @@ using WebAPI.Features.Notes;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<IAppDbContext, AppDbContext>(o =>
+builder.Services.AddDbContext<AppDbContext>(o =>
 {
     o.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
     o.UseSnakeCaseNamingConvention();
 });
 
-builder.Services.AddScoped<INoteRepository, NoteRepository>();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddNotes();
 
 var app = builder.Build();
 
 app.MigrateDatabase();
 
-if (!app.Environment.IsDevelopment())
+app.UseHttpsRedirection();
+
+if (app.Environment.IsDevelopment())
 {
-    app.UseHttpsRedirection();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.MapEndpoints();
+app.UseNotes();
 
 app.Run();
