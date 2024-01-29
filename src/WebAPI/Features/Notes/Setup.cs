@@ -1,3 +1,7 @@
+using WebAPI.Features.Notes.CreateNote;
+using WebAPI.Features.Notes.DestroyNote;
+using WebAPI.Features.Notes.ReadNote;
+
 namespace WebAPI.Features.Notes;
 
 public static class Setup
@@ -11,10 +15,8 @@ public static class Setup
 
     public static void UseNotes(this WebApplication app)
     {
-        app.MapPost("/api/notes", CreateNote.HttpHandler.Handler)
-            .WithOpenApi();
-        
-        app.MapGet("/api/notes/{noteId:guid}", ReadNote.HttpHandler.Handler)
-            .WithOpenApi();
+        app.MapCreateNoteEndpoint();
+        app.MapReadNoteEndpoint();
+        app.MapDestroyNoteEndpoint();
     }
 }
