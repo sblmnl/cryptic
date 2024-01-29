@@ -26,7 +26,7 @@ services:
       dockerfile: ./Dockerfile
     container_name: cryptic-webapi
     volumes:
-      - ~/.aspnet/https/${CERT_FILE}:/https/${CERT_FILE}:ro
+      - ${CERT_HOST_DIR}/${CERT_FILE}:/https/${CERT_FILE}:ro
     environment:
       - ASPNETCORE_ENVIRONMENT=${APP_ENVIRONMENT}
       - ASPNETCORE_HTTP_PORTS=${WEBAPI_HTTP_PORT}
