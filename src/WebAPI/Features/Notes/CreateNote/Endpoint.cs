@@ -37,7 +37,7 @@ public static class Endpoint
                 Id = Guid.NewGuid(),
                 Content = req.Content,
                 DeleteAfter = deleteAfter,
-                ControlTokenHash = Pbkdf2Hash.New(controlToken.Value, 500000)
+                ControlTokenHash = Pbkdf2Hash.Create(controlToken.Value)
             };
 
             await noteRepository.AddNoteAsync(note, ctx.RequestAborted);
@@ -49,17 +49,25 @@ public static class Endpoint
                 DoNotWarn = req.DoNotWarn,
                 ControlToken = controlToken.ToString()
             };
+
+            var links = new List<Link>()
+            {
+                new Link(
+                    ctx.Request.GetBaseUri()
+                    + (note.DeleteAfter is Domain.DeleteAfter.Reading { DoNotWarn: false }
+                        ? $"/{note.Id}?acknowledge="
+                        : $"/{note.Id}"),
+                    "read-note",
+                    HttpMethods.Get),
+                new Link(
+                    ctx.Request.GetBaseUri().ToString(),
+                    "destroy-note",
+                    HttpMethods.Delete)
+            };
             
             return Results.Created(
                 new Uri(note.Id.ToString(), UriKind.Relative),
-                new HttpResponseBody(res,
-                    new List<Link>
-                    {
-                        new Link(
-                            ctx.Request.GetBaseUri().ToString(),
-                            "destroy-note",
-                            HttpMethods.Delete)
-                    }));
+                new HttpResponseBody(res, links));
         })
             .WithName("CreateNote")
             .WithOpenApi();
