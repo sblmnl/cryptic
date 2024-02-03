@@ -22,7 +22,6 @@ public static class Domain
 
     public record ControlToken
     {
-        public const int MaximumLength = 32;
         public const int DefaultLength = 16;
         
         public byte[] Value { get; }
@@ -32,6 +31,11 @@ public static class Domain
             Value = value;
         }
 
+        public override string ToString()
+        {
+            return Convert.ToBase64String(Value);
+        }
+        
         public static ControlToken New(int length = DefaultLength)
         {
             var token = new byte[length];
@@ -41,21 +45,21 @@ public static class Domain
 
         public static bool TryParse(string value, out ControlToken? output)
         {
-            var decoded = new Span<byte>(new byte[MaximumLength]);
+            var decoded = new Span<byte>(new byte[value.Length]);
 
-            if (!Convert.TryFromBase64String(value, decoded, out var bytesWritten))
+            if (!Convert.TryFromBase64String(value, decoded, out var length))
             {
                 output = null;
                 return false;
             }
 
-            output = new(decoded[..bytesWritten].ToArray());
+            output = new(decoded[..length].ToArray());
             return true;
         }
 
-        public override string ToString()
+        public static implicit operator string(ControlToken value)
         {
-            return Convert.ToBase64String(Value);
+            return value.ToString();
         }
     }
 

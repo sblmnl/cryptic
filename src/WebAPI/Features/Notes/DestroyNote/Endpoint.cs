@@ -20,7 +20,7 @@ public static class Endpoint
             
             if (!ctx.Request.TryGetAuthorization(out var authorization)
                 || !Domain.ControlToken.TryParse(authorization!, out var controlToken)
-                || !note.ControlTokenHash.Matches(controlToken!.Value))
+                || !note.ControlTokenHash.Verify(controlToken!.Value))
             {
                 return Results.Unauthorized();
             }
