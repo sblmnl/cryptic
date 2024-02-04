@@ -14,23 +14,49 @@ public static class Storage
         public required bool DoNotWarn { get; init; }
         public required DateTimeOffset? DeleteAt { get; init; }
         public required string ControlTokenHash { get; init; }
+        public required string? PasswordHash { get; init; }
+        public required string? KeyOptions { get; init; }
     }
     
     public static Result<Domain.Note> ToDomainType(this Note note)
     {
-        if (!Pbkdf2Hash.TryParse(note.ControlTokenHash, out var tokenHash)
+        if (!Pbkdf2.Key.TryParse(note.ControlTokenHash, out var tokenHash)
             || tokenHash is null)
         {
             return Result.Fail("Invalid token hash!");
         }
 
-        return Result.Ok(new Domain.Note
+        if (note.PasswordHash is null
+            && note.KeyOptions is null)
         {
-            Id = note.Id,
-            Content = note.Content,
-            DeleteAfter = Domain.DeleteAfter.From(note.DeleteAt, note.DoNotWarn),
-            ControlTokenHash = tokenHash
-        });
+            return Result.Ok(new Domain.Note.Unprotected(
+                note.Id,
+                note.Content,
+                Domain.DeleteAfter.From(note.DeleteAt, note.DoNotWarn),
+                tokenHash) as Domain.Note);
+        }
+        
+        if (note.PasswordHash is null
+            || !Pbkdf2.Key.TryParse(note.PasswordHash, out var passwordHash)
+            || passwordHash is null)
+        {
+            return Result.Fail("Invalid password hash!");
+        }
+        
+        if (note.KeyOptions is null
+            || !Pbkdf2.Options.TryParse(note.KeyOptions, out var keyOptions)
+            || keyOptions is null)
+        {
+            return Result.Fail("Invalid key options!");
+        }
+        
+        return Result.Ok(new Domain.Note.Protected(
+            note.Id,
+            note.Content,
+            Domain.DeleteAfter.From(note.DeleteAt, note.DoNotWarn),
+            tokenHash,
+            passwordHash,
+            keyOptions) as Domain.Note);
     }
     
     public static Note ToStorageType(this Domain.Note note)
@@ -47,13 +73,27 @@ public static class Storage
             _ => false
         };
         
+        var passwordHash = note switch
+        {
+            Domain.Note.Protected x => x.PasswordHash,
+            _ => null
+        };
+        
+        var keyOptions = note switch
+        {
+            Domain.Note.Protected x => x.KeyOptions,
+            _ => null
+        };
+        
         return new()
         {
             Id = note.Id,
             Content = note.Content,
             DoNotWarn = doNotWarn,
             DeleteAt = deleteAt,
-            ControlTokenHash = note.ControlTokenHash.ToString()
+            ControlTokenHash = note.ControlTokenHash.ToString(),
+            PasswordHash = passwordHash?.ToString(),
+            KeyOptions = keyOptions?.ToString()
         };
     }
 

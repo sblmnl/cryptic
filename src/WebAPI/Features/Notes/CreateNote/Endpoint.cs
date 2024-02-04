@@ -3,7 +3,7 @@ using WebAPI.Common.Security;
 
 namespace WebAPI.Features.Notes.CreateNote;
 
-public record Request(string Content, DateTimeOffset? DeleteAt, bool DoNotWarn);
+public record Request(string Content, DateTimeOffset? DeleteAt, bool DoNotWarn, string? Password);
 
 public record Response()
 {
@@ -29,16 +29,19 @@ public static class Endpoint
             {
                 return Results.BadRequest(new HttpResponseBody(Errors.DeleteAfterAlreadyPassed));
             }
-
-            var controlToken = Domain.ControlToken.New();
             
-            var note = new Domain.Note()
+            var controlToken = Domain.ControlToken.New();
+
+            var note = new Domain.Note.Unprotected(
+                Guid.NewGuid(),
+                req.Content,
+                deleteAfter,
+                Pbkdf2.Key.Create(controlToken.Value)) as Domain.Note;
+            
+            if (req.Password is not null)
             {
-                Id = Guid.NewGuid(),
-                Content = req.Content,
-                DeleteAfter = deleteAfter,
-                ControlTokenHash = Pbkdf2Hash.Create(controlToken.Value)
-            };
+                note = Domain.Note.Protected.New((note as Domain.Note.Unprotected)!, req.Password);
+            }
 
             await noteRepository.AddNoteAsync(note, ctx.RequestAborted);
 
