@@ -1,5 +1,4 @@
 using System.Text;
-using Microsoft.AspNetCore.Http.HttpResults;
 using WebAPI.Common;
 
 namespace WebAPI.Features.Notes.ReadNote;

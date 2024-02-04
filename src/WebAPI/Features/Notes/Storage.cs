@@ -1,4 +1,3 @@
-using System.Runtime.Intrinsics.Arm;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Common.Security;
