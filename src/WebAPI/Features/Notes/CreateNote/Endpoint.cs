@@ -29,7 +29,7 @@ public static class Endpoint
             {
                 return Results.BadRequest(new HttpResponseBody(Errors.DeleteAfterAlreadyPassed));
             }
-            
+
             var controlToken = Domain.ControlToken.New();
 
             var note = new Domain.Note.Unprotected(
