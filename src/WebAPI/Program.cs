@@ -1,5 +1,7 @@
 using System.Security.Cryptography;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WebAPI;
 using WebAPI.Common.Security;
 using WebAPI.Features.Notes;

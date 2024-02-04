@@ -1,3 +1,5 @@
+using System.Text;
+using Microsoft.AspNetCore.Http.HttpResults;
 using WebAPI.Common;
 
 namespace WebAPI.Features.Notes.ReadNote;
@@ -17,7 +19,7 @@ public static class Endpoint
             {
                 return Results.NotFound(new HttpResponseBody(Errors.NoteNotFound));
             }
-
+            
             if (note.DeleteAfter is Domain.DeleteAfter.Reading { DoNotWarn: false }
                 && !ctx.Request.Query.ContainsKey("acknowledge"))
             {
@@ -31,13 +33,31 @@ public static class Endpoint
                             HttpMethods.Get)
                     }));
             }
+            
+            if (note is Domain.Note.Protected protectedNote)
+            {
+                if (!ctx.Request.TryGetAuthorization(out var authorization)
+                    || !protectedNote.PasswordHash.Verify(authorization!, Encoding.UTF8))
+                {
+                    return Results.Unauthorized();
+                }
+
+                if (!protectedNote.TryDecrypt(authorization!, out var decryptedNote))
+                {
+                    return Results.StatusCode(500);
+                }
+                
+                note = decryptedNote!;
+            }
 
             if (note.DeleteAfter is Domain.DeleteAfter.Reading)
             {
                 await noteRepository.RemoveNoteAsync(note, ctx.RequestAborted);
             }
-
+            
             return Results.Ok(new HttpResponseBody(note.Content));
-        }).WithName("ReadNote").WithOpenApi();
+        })
+            .WithName("ReadNote")
+            .WithOpenApi();
     }
 }
