@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using WebAPI;
-using WebAPI.Features.Notes;
+using Cryptic.Shared.Persistence;
+using Cryptic.WebAPI;
+using Cryptic.WebAPI.Common.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,13 +8,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
 
-builder.Services.AddDbContext<AppDbContext>(o =>
-{
-    o.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
-    o.UseSnakeCaseNamingConvention();
-});
+builder.Services.AddMediatR(c =>
+    c.RegisterServicesFromAssembly(Cryptic.Shared.AssemblyReference.Assembly));
 
-builder.Services.AddNotes();
+builder.Services.AddPersistence(builder.Configuration.GetConnectionString("Database")!);
+
+builder.Services.AddExceptionHandler<ExceptionHandler>();
 
 var app = builder.Build();
 
@@ -28,6 +27,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseNotes();
+app.MapEndpoints();
+
+app.UseExceptionHandler(_ => {});
 
 app.Run();
