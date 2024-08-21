@@ -10,7 +10,7 @@ public class ApiResponseBody
         Errors = [HttpErrors.InternalError]
     };
     
-    public string Status => Errors.Any() ? "ok" : "error";
+    public string Status => Errors.Any() ? "error" : "ok";
     public object? Data { get; init; } = null;
     public IEnumerable<Error> Errors { get; init; } = [];
     public IEnumerable<string> Warnings { get; init; } = [];
