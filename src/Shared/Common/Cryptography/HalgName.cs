@@ -43,7 +43,7 @@ public record HalgName
     
     public static HalgName Parse(string value)
     {
-        var halgName = Available.GetValueOrDefault(value);
+        var halgName = Available.GetValueOrDefault(value.ToUpper());
         
         if (halgName is null)
         {

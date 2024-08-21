@@ -80,7 +80,7 @@ public static class Pbkdf2
         {
             return string.Join(
                 ".",
-                HashAlgorithm.ToString().ToLower(),
+                HashAlgorithm,
                 Iterations,
                 Convert.ToBase64String(Salt),
                 KeyLength);
