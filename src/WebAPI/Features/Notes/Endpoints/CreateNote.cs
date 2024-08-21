@@ -4,7 +4,7 @@ namespace Cryptic.WebAPI.Features.Notes;
 
 public static class CreateNote
 {
-    public record Request(string Content, DateTimeOffset? DeleteAfterTime, bool DeleteOnReceipt, string? Password);
+    public record Request(string? Content, DateTimeOffset? DeleteAfterTime, bool DeleteOnReceipt, string? Password);
 
     public record ResponseBody
     {
@@ -31,7 +31,7 @@ public static class CreateNote
     {
         var command = new CreateNoteCommand
         {
-            Content = req.Content,
+            Content = req.Content ?? "",
             DeleteAfterTime = req.DeleteAfterTime ?? DateTimeOffset.UtcNow + TimeSpan.FromDays(30),
             DeleteOnReceipt = req.DeleteOnReceipt,
             Password = req.Password
