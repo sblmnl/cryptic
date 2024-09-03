@@ -1,6 +1,29 @@
 using Cryptic.Shared.Persistence;
 
-namespace Cryptic.Shared.Features.Notes.ReadNote;
+namespace Cryptic.Shared.Features.Notes.Commands;
+
+public record ReadNoteResponse(string Content);
+
+public record ReadNoteCommand : IRequest<Result<ReadNoteResponse>>
+{
+    public required Guid NoteId { get; init; }
+    public required string? Password { get; init; }
+}
+
+public static class ReadNoteErrors
+{
+    public static readonly CodedError NoteNotFound = new()
+    {
+        Code = "Cryptic.Notes.ReadNote.NoteNotFound",
+        Message = "That note doesn't exist!"
+    };
+
+    public static readonly CodedError IncorrectPassword = new()
+    {
+        Code = "Cryptic.Notes.ReadNote.IncorrectPassword",
+        Message = "The password you entered was incorrect!"
+    };
+}
 
 public class ReadNoteCommandHandler : IRequestHandler<ReadNoteCommand, Result<ReadNoteResponse>>
 {

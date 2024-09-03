@@ -1,6 +1,29 @@
 using Cryptic.Shared.Persistence;
 
-namespace Cryptic.Shared.Features.Notes.CreateNote;
+namespace Cryptic.Shared.Features.Notes.Commands;
+
+public record CreateNoteResponse
+{
+    public required Domain.Note Note { get; init; }
+    public required string ControlToken { get; init; }
+}
+
+public record CreateNoteCommand : IRequest<Result<CreateNoteResponse>>
+{
+    public required string Content { get; init; }
+    public required DateTimeOffset DeleteAfterTime { get; init; }
+    public required bool DeleteOnReceipt { get; init; }
+    public required string? Password { get; init; }
+}
+
+public static class CreateNoteErrors
+{
+    public static readonly CodedError DeleteAfterAlreadyPassed = new()
+    {
+        Code = "Cryptic.Notes.CreateNote.DeleteAfterAlreadyPassed",
+        Message = "The provided date and time to delete the note has already passed!"
+    };
+}
 
 public class CreateNoteCommandHandler : IRequestHandler<CreateNoteCommand, Result<CreateNoteResponse>>
 {

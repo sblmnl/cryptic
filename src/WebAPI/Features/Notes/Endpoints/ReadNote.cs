@@ -1,11 +1,11 @@
-using System.Net;
-using System.Text.Json;
-using Cryptic.Shared.Features.Notes.ReadNote;
+using Cryptic.Shared.Features.Notes.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cryptic.WebAPI.Features.Notes;
 
-public static class ReadNote
+public record ReadNoteRequest(string? Password);
+
+public static class ReadNoteEndpoint
 {
     public static IResult HandleFailure(Result<ReadNoteResponse>.Fail failureResult)
     {
@@ -29,14 +29,14 @@ public static class ReadNote
     
     public static async Task<IResult> RequestHandler(
         [FromRoute] Guid noteId,
-        [FromQuery] string? password,
+        [FromBody] ReadNoteRequest req,
         ISender sender,
         HttpContext ctx)
     {
         var command = new ReadNoteCommand
         {
             NoteId = noteId,
-            Password = password
+            Password = req.Password
         };
         
         var result = await sender.Send(command);
@@ -54,9 +54,9 @@ public static class ReadNote
         });
     }
     
-    public static void MapEndpoint(WebApplication app)
+    public static void Map(WebApplication app)
     {
-        app.MapGet("/notes/{noteId:guid}", RequestHandler)
+        app.MapPost("/notes/{noteId:guid}/read", RequestHandler)
             .WithName("ReadNote")
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)

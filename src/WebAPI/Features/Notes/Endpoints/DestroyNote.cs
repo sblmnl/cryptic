@@ -1,12 +1,12 @@
-using Cryptic.Shared.Features.Notes.DestroyNote;
+using Cryptic.Shared.Features.Notes.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cryptic.WebAPI.Features.Notes;
 
-public static class DestroyNote
+public record DestroyNoteRequest(string? ControlToken);
+
+public static class DestroyNoteEndpoint
 {
-    public record Request(string? ControlToken);
-    
     public static IResult HandleFailure(Result<Nothing>.Fail failureResult)
     {
         if (failureResult.Error == DestroyNoteErrors.NoteNotFound
@@ -23,7 +23,7 @@ public static class DestroyNote
     
     public static async Task<IResult> RequestHandler(
         [FromRoute] Guid noteId,
-        [FromBody] Request req,
+        [FromBody] DestroyNoteRequest req,
         ISender sender,
         HttpContext ctx)
     {
@@ -43,7 +43,7 @@ public static class DestroyNote
         return Results.Ok(new ApiResponseBody());
     }
     
-    public static void MapEndpoint(WebApplication app)
+    public static void Map(WebApplication app)
     {
         app.MapDelete("/notes/{noteId:guid}", RequestHandler)
             .WithName("DestroyNote")
