@@ -27,7 +27,7 @@ public class CreateNoteCommandHandler : IRequestHandler<CreateNoteCommand, Resul
         }
 
         var controlToken = ControlToken.Create();
-        var controlTokenHash = Pbkdf2.Key.Create(controlToken.Value);
+        var controlTokenHash = Pbkdf2.Key.Create(controlToken);
 
         Domain.NoteContent noteContent = command.Password is null
             ? new Domain.NoteContent.Plaintext { Value = command.Content }

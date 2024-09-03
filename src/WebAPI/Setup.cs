@@ -10,6 +10,7 @@ public static class Setup
     {
         CreateNote.MapEndpoint(app);
         ReadNote.MapEndpoint(app);
+        DestroyNote.MapEndpoint(app);
     }
     
     public static void MigrateDatabase(this WebApplication app)

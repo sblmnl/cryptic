@@ -1,3 +1,3 @@
 namespace Cryptic.Shared.Common.Primitives;
 
-public record Unit;
+public record Nothing;

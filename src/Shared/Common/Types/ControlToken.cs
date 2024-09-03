@@ -27,7 +27,7 @@ public record ControlToken
     
     public static ControlToken Parse(string value)
     {
-        return new (Convert.FromBase64String(value));
+        return new(Convert.FromBase64String(value));
     }
 
     public static bool TryParse(string value, out ControlToken? output)
@@ -44,8 +44,6 @@ public record ControlToken
         }
     }
 
-    public static implicit operator string(ControlToken value)
-    {
-        return value.ToString();
-    }
+    public static implicit operator byte[](ControlToken value) => value.Value;
+    public static implicit operator string(ControlToken value) => value.ToString();
 }
