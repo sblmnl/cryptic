@@ -9,3 +9,8 @@
 
 # development environment
 **/.env
+
+# WebUI artificats/build outputs
+node_modules/
+.fable-build/
+dist/
