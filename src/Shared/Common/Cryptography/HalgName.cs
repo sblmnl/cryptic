@@ -24,11 +24,13 @@ public record HalgName
         SHA3_384,
         SHA3_512
     ];
-    
+
     public string Name { get; } = "SHA256";
     public HashAlgorithmName Algorithm { get; } = HashAlgorithmName.SHA256;
 
-    public HalgName() { }
+    public HalgName()
+    {
+    }
 
     public HalgName(string name, HashAlgorithmName algorithm)
     {
@@ -40,20 +42,16 @@ public record HalgName
     {
         return Name;
     }
-    
+
     public static HalgName Parse(string? value)
     {
         var halgName = Available.FirstOrDefault(x =>
-            string.Equals(x.Name, value, StringComparison.CurrentCultureIgnoreCase));
-        
-        if (halgName is null)
-        {
-            throw new NotSupportedException("Unknown hash algorithm!");
-        }
+                           string.Equals(x.Name, value, StringComparison.CurrentCultureIgnoreCase))
+                       ?? throw new NotSupportedException("Unknown hash algorithm!");
 
         return halgName;
     }
-    
+
     public static implicit operator HashAlgorithmName(HalgName halgName) => halgName.Algorithm;
     public static implicit operator HalgName(HashAlgorithmName hashAlgorithmName) => Parse(hashAlgorithmName.Name);
     public static implicit operator string(HalgName value) => value.ToString();
