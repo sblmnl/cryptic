@@ -1,4 +1,4 @@
-using Cryptic.Shared.Features.Notes.CreateNote;
+using Cryptic.Shared.Features.Notes.Commands;
 
 namespace Cryptic.WebAPI.Features.Notes;
 

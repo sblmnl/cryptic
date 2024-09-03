@@ -1,6 +1,4 @@
-using System.Net;
-using System.Text.Json;
-using Cryptic.Shared.Features.Notes.ReadNote;
+using Cryptic.Shared.Features.Notes.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cryptic.WebAPI.Features.Notes;

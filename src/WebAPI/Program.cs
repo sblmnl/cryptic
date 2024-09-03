@@ -1,4 +1,3 @@
-using System.Text;
 using Cryptic.Shared.Features.Notes;
 using Cryptic.Shared.Persistence;
 using Cryptic.WebAPI;
@@ -16,7 +15,7 @@ builder.Services.AddMediatR(c =>
 builder.Services.AddPersistence(builder.Configuration.GetConnectionString("Database")!);
 builder.Services.AddNotes();
 
-builder.Services.AddExceptionHandler<ExceptionHandler>();
+builder.Services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 
 var app = builder.Build();
 

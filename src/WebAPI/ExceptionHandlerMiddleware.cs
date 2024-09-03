@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Diagnostics;
 
 namespace Cryptic.WebAPI.Common.Middleware;
 
-public class ExceptionHandler : IExceptionHandler
+public class ExceptionHandlerMiddleware : IExceptionHandler
 {
-    private readonly ILogger<ExceptionHandler> _logger;
+    private readonly ILogger<ExceptionHandlerMiddleware> _logger;
     
-    public ExceptionHandler(ILogger<ExceptionHandler> logger)
+    public ExceptionHandlerMiddleware(ILogger<ExceptionHandlerMiddleware> logger)
     {
         _logger = logger;
     }

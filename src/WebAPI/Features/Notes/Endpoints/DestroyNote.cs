@@ -1,4 +1,4 @@
-using Cryptic.Shared.Features.Notes.DestroyNote;
+using Cryptic.Shared.Features.Notes.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cryptic.WebAPI.Features.Notes;

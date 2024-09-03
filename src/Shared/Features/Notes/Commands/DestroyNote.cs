@@ -1,7 +1,27 @@
-using System.Text;
 using Cryptic.Shared.Persistence;
 
-namespace Cryptic.Shared.Features.Notes.DestroyNote;
+namespace Cryptic.Shared.Features.Notes.Commands;
+
+public record DestroyNoteCommand : IRequest<Result<Nothing>>
+{
+    public required Guid NoteId { get; init; }
+    public required string ControlToken { get; init; }
+}
+
+public static class DestroyNoteErrors
+{
+    public static readonly CodedError NoteNotFound = new()
+    {
+        Code = "Cryptic.Notes.DestroyNote.NoteNotFound",
+        Message = "That note doesn't exist!"
+    };
+    
+    public static readonly CodedError IncorrectControlToken = new()
+    {
+        Code = "Cryptic.Notes.DestroyNote.IncorrectControlToken",
+        Message = "The provided control token was incorrect!"
+    };
+}
 
 public class DestroyNoteCommandHandler : IRequestHandler<DestroyNoteCommand, Result<Nothing>>
 {
