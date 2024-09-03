@@ -1,0 +1,16 @@
+{
+    "type": "module",
+    "scripts": {
+        "start": "dotnet fable watch ./src/WebUI --verbose -o ./src/WebUI/.fable-build --run vite",
+        "build": "dotnet fable ./src/WebUI --outDir ./src/WebUI/.fable-build --run vite build"
+    },
+    "dependencies": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "use-sync-external-store": "^1.2.2"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "^4.3.1",
+        "vite": "^5.4.3"
+    }
+}
