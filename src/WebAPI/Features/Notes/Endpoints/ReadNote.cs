@@ -16,7 +16,7 @@ public static class ReadNote
         
         if (failureResult.Error == ReadNoteErrors.NoteNotFound)
         {
-            return Results.NotFound(responseBody);
+            return Results.Json(responseBody, statusCode: StatusCodes.Status404NotFound);
         }
         
         if (failureResult.Error == ReadNoteErrors.IncorrectPassword)
