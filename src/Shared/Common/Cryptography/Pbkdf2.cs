@@ -92,8 +92,6 @@ public static class Pbkdf2
         {
             var key = Create(password, Options);
             
-            Console.WriteLine($"Expected \"{BitConverter.ToString(Value)}\" - Received \"{BitConverter.ToString(key)}\"");
-            
             return CryptographicOperations.FixedTimeEquals(Value, key.Value);
         }
 

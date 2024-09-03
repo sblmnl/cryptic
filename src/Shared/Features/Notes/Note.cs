@@ -61,8 +61,6 @@ public static partial class Domain
                 var plaintextBytes = encoder.GetBytes(content);
                 var ciphertextBytes = AesCbc.Encrypt(plaintextBytes, encryptionKey);
                 var signature = Hmac.Sign(ciphertextBytes, signingKey);
-
-                Console.WriteLine(JsonSerializer.Serialize(signature));
                 
                 return new()
                 {
