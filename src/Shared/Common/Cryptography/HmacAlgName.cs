@@ -14,7 +14,7 @@ public record HmacAlgName
     public static readonly HmacAlgName HMACSHA3_384 = new("HMACSHA3-384", 48);
     public static readonly HmacAlgName HMACSHA3_512 = new("HMACSHA3-512", 64);
 
-    public static readonly IList<HmacAlgName> Available =
+    public static readonly List<HmacAlgName> Available =
     [
         HMACMD5,
         HMACSHA1,

@@ -13,7 +13,7 @@ public record HalgName
     public static readonly HalgName SHA3_384 = new("SHA3-384", HashAlgorithmName.SHA3_384);
     public static readonly HalgName SHA3_512 = new("SHA3-512", HashAlgorithmName.SHA3_512);
 
-    public static readonly IList<HalgName> Available =
+    public static readonly List<HalgName> Available =
     [
         MD5,
         SHA1,
