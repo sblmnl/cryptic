@@ -4,7 +4,7 @@ namespace Cryptic.WebAPI.Features.Notes;
 
 public static class MetaLinks
 {
-    private static string GetNoteBaseUri(HttpRequest req, Domain.Note note) => req.GetBaseUri() + $"/{note.Id}";
+    public static string GetNoteBaseUri(HttpRequest req, Domain.Note note) => req.GetBaseUri() + $"/{note.Id}";
     
     public static MetaLink GetReadNoteLink(this Domain.Note note, HttpRequest req)
     {
