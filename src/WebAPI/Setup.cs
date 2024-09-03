@@ -8,9 +8,9 @@ public static class Setup
 {
     public static void MapEndpoints(this WebApplication app)
     {
-        CreateNote.MapEndpoint(app);
-        ReadNote.MapEndpoint(app);
-        DestroyNote.MapEndpoint(app);
+        CreateNoteEndpoint.Map(app);
+        ReadNoteEndpoint.Map(app);
+        DestroyNoteEndpoint.Map(app);
     }
     
     public static void MigrateDatabase(this WebApplication app)

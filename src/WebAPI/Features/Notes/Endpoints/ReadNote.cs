@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cryptic.WebAPI.Features.Notes;
 
-public static class ReadNote
+public static class ReadNoteEndpoint
 {
     public static IResult HandleFailure(Result<ReadNoteResponse>.Fail failureResult)
     {
@@ -52,7 +52,7 @@ public static class ReadNote
         });
     }
     
-    public static void MapEndpoint(WebApplication app)
+    public static void Map(WebApplication app)
     {
         app.MapGet("/notes/{noteId:guid}", RequestHandler)
             .WithName("ReadNote")

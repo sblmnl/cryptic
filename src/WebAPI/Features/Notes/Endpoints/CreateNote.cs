@@ -2,32 +2,36 @@ using Cryptic.Shared.Features.Notes.Commands;
 
 namespace Cryptic.WebAPI.Features.Notes;
 
-public static class CreateNote
+public record CreateNoteRequest(
+    string? Content,
+    DateTimeOffset? DeleteAfterTime,
+    bool DeleteOnReceipt,
+    string? Password);
+
+public record CreateNoteResponseBody
 {
-    public record Request(string? Content, DateTimeOffset? DeleteAfterTime, bool DeleteOnReceipt, string? Password);
+    public required Guid Id { get; init; }
+    public required DateTimeOffset DeleteAfterTime { get; init; }
+    public required bool DeleteOnReceipt { get; init; }
+    public required string ControlToken { get; init; }
+}
 
-    public record ResponseBody
-    {
-        public required Guid Id { get; init; }
-        public required DateTimeOffset DeleteAfterTime { get; init; }
-        public required bool DeleteOnReceipt { get; init; }
-        public required string ControlToken { get; init; }
-    }
-
+public static class CreateNoteEndpoint
+{
     public static IResult HandleFailure(Result<CreateNoteResponse>.Fail failureResult)
     {
         if (failureResult.Error == CreateNoteErrors.DeleteAfterAlreadyPassed)
         {
             return Results.BadRequest(new ApiResponseBody
             {
-                Errors = [ CreateNoteErrors.DeleteAfterAlreadyPassed ]
+                Errors = [CreateNoteErrors.DeleteAfterAlreadyPassed]
             });
         }
 
         return ApiResponses.InternalError;
     }
-    
-    public static async Task<IResult> RequestHandler(Request req, ISender sender, HttpContext ctx)
+
+    public static async Task<IResult> CreateNoteRequestHandler(CreateNoteRequest req, ISender sender, HttpContext ctx)
     {
         var command = new CreateNoteCommand
         {
@@ -36,20 +40,20 @@ public static class CreateNote
             DeleteOnReceipt = req.DeleteOnReceipt,
             Password = req.Password
         };
-        
+
         var result = await sender.Send(command, ctx.RequestAborted);
 
         if (result is Result<CreateNoteResponse>.Fail failureResult)
         {
             return HandleFailure(failureResult);
         }
-        
+
         var response = (result as Result<CreateNoteResponse>.Ok)!.Value;
         var note = response.Note;
-        
+
         return Results.Created(new Uri(note.Id.ToString(), UriKind.Relative), new ApiResponseBody
         {
-            Data = new ResponseBody
+            Data = new CreateNoteResponseBody
             {
                 Id = note.Id,
                 DeleteAfterTime = note.DeleteAfter.Time,
@@ -58,7 +62,8 @@ public static class CreateNote
             },
             Meta = new MetaInformation()
             {
-                Links = [
+                Links =
+                [
                     note.GetReadNoteLink(ctx.Request),
                     note.GetDestroyNoteLink(ctx.Request)
                 ]
@@ -66,9 +71,9 @@ public static class CreateNote
         });
     }
 
-    public static void MapEndpoint(WebApplication app)
+    public static void Map(WebApplication app)
     {
-        app.MapPost("/notes", RequestHandler)
+        app.MapPost("/notes", CreateNoteRequestHandler)
             .WithName("CreateNote")
             .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
