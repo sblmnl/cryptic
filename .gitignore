@@ -1,6 +1,7 @@
 # ide configuration
 **/.vscode
 **/.idea
+**/*.DotSettings.*
 
 # build artifacts
 **/obj

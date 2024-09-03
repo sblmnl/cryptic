@@ -12,7 +12,7 @@ DB_PASSWORD=$DEFAULT_PASSWORD
 
 # https
 CERT_HOST_DIR=./.dev/https
-CERT_FILE=cryptic.pfx
+CERT_FILE=https.pfx
 CERT_PASSWORD=$DEFAULT_PASSWORD
 
 # ports
