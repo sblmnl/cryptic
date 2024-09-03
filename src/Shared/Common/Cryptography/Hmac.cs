@@ -1,16 +1,40 @@
 using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Cryptic.Shared.Common.Cryptography;
 
 public class Hmac
 {
-    public byte[] Hash { get; }
-    public HmacAlgName Algorithm { get; }
-
-    private Hmac(byte[] hash, HmacAlgName algorithm)
+    [JsonPropertyName("hmac")]
+    public required byte[] Hash { get; init; }
+    
+    [JsonPropertyName("h")]
+    public required HmacAlgName Algorithm { get; init; }
+    
+    public static Hmac Sign(byte[] data, byte[] key, HmacAlgName? algorithm = default)
     {
-        Hash = hash;
-        Algorithm = algorithm;
+        var h = algorithm ?? HmacAlgName.HMACSHA256;
+        var hmac = h.GetAlgorithm(key);
+        
+        return new()
+        {
+            Hash = hmac.ComputeHash(data),
+            Algorithm = h
+        };
+    }
+    
+    public static Hmac Deserialize(string value)
+    {
+        var jsonString = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+        return JsonSerializer.Deserialize<Hmac>(jsonString) ?? throw new FormatException("Invalid HMAC!");
+    }
+    
+    public string Serialize()
+    {
+        var jsonString = JsonSerializer.Serialize(this);
+        return Convert.ToBase64String(Encoding.UTF8.GetBytes(jsonString));
     }
     
     public bool Verify(byte[] data, byte[] key)
@@ -19,48 +43,4 @@ public class Hmac
 
         return CryptographicOperations.FixedTimeEquals(Hash, hmac.Hash);
     }
-    
-    public override string ToString() => string.Join(".", Algorithm, Convert.ToBase64String(Hash));
-    
-    public static Hmac Sign(byte[] data, byte[] key, HmacAlgName? algorithm = default)
-    {
-        var hmacAlgName = algorithm ?? HmacAlgName.HMACSHA256;
-        var hmac = hmacAlgName.GetAlgorithm(key);
-        
-        var signature = hmac.ComputeHash(data);
-
-        return new(signature, hmacAlgName);
-    }
-    
-    public static Hmac Parse(string value)
-    {
-        var parts = value.Split('.');
-
-        var hmacAlgName = HmacAlgName.Parse(parts[0]);
-        var hash = new Span<byte>(new byte[parts[2].Length]);
-        
-        if (!Convert.TryFromBase64String(parts[1], hash, out var hashLength)
-            || hashLength != hmacAlgName.HashLength)
-        {
-            throw new FormatException("Invalid HMAC!");
-        }
-
-        return new Hmac(hash[..hashLength].ToArray(), hmacAlgName);
-    }
-
-    public static bool TryParse(string value, out Hmac? output)
-    {
-        try
-        {
-            output = Parse(value);
-            return true;
-        }
-        catch
-        {
-            output = null;
-            return false;
-        }
-    }
-    
-    public static implicit operator string(Hmac value) => value.ToString();
 }

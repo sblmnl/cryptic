@@ -1,5 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Cryptic.Shared.Common.Cryptography;
 
@@ -12,106 +14,68 @@ public static class Pbkdf2
     
     public record Options
     {
-        public HalgName HashAlgorithm { get; private init; } = DefaultHashAlgorithm;
-        public int Iterations { get; private init; } = DefaultIterations;
-        public byte[] Salt { get; private init; } = new byte[DefaultSaltLength];
-        public int KeyLength { get; private init; } = DefaultKeyLength;
-    
-        private Options() { }
-
-        private Options(HalgName hashAlgorithm, int iterations, byte[] salt, int keyLength)
-        {
-            HashAlgorithm = hashAlgorithm;
-            Iterations = iterations;
-            Salt = salt;
-            KeyLength = keyLength;
-        }
-
+        [JsonPropertyName("h")]
+        public required HalgName HashAlgorithm { get; init; }
+        
+        [JsonPropertyName("c")]
+        public required int Iterations { get; init; }
+        
+        [JsonPropertyName("salt")]
+        public required byte[] Salt { get; init; }
+        
+        [JsonPropertyName("dkLen")]
+        public required int KeyLength { get; init; }
+        
         public static Options Create(
             int keyLength = DefaultKeyLength,
             int saltLength = DefaultSaltLength,
             int iterations = DefaultIterations,
             HalgName? hashAlgorithm = default)
         {
-            var salt = new Span<byte>(new byte[saltLength]);
-            RandomNumberGenerator.Fill(salt);
-
-            return new(hashAlgorithm ?? DefaultHashAlgorithm, iterations, salt.ToArray(), keyLength);
-        }
-
-        public static Options Parse(string value)
-        {
-            var parts = value.Split('.');
-
-            if (parts.Length != 4)
-            {
-                throw new FormatException("Invalid PBKDF2 options!");
-            }
-            
-            var hashAlgorithm = HalgName.Parse(parts[0]);
-            var salt = Convert.FromBase64String(parts[2]);
-            var iterations = int.Parse(parts[1]);
-            var keyLength = int.Parse(parts[3]);
-            
             return new()
             {
-                HashAlgorithm = hashAlgorithm,
+                HashAlgorithm = hashAlgorithm ?? DefaultHashAlgorithm,
                 Iterations = iterations,
-                Salt = salt,
+                Salt = RandomNumberGenerator.GetBytes(saltLength),
                 KeyLength = keyLength
             };
         }
         
-        public static bool TryParse(string value, out Options? output)
+        public static Options Deserialize(string value)
         {
-            try
-            {
-                output = Parse(value);
-                return true;
-            }
-            catch
-            {
-                output = null;
-                return false;
-            }
+            var jsonString = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+            
+            return JsonSerializer.Deserialize<Options>(jsonString)
+                   ?? throw new FormatException("Invalid PBKDF2 options!");
         }
         
-        public override string ToString()
+        public string Serialize()
         {
-            return string.Join(
-                ".",
-                HashAlgorithm,
-                Iterations,
-                Convert.ToBase64String(Salt),
-                KeyLength);
-        }
-        
-        public static implicit operator string(Options value)
-        {
-            return value.ToString();
+            var jsonString = JsonSerializer.Serialize(this);
+            
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(jsonString));
         }
     }
 
     public record Key
     {
-        public Options Options { get; private init; } = Options.Create();
-        public byte[] Value { get; private init; } = new byte[DefaultKeyLength];
-
-        private Key() { }
-
+        [JsonPropertyName("o")]
+        public required Options Options { get; init; }
+        
+        [JsonPropertyName("dk")]
+        public required byte[] Value { get; init; }
+        
         public static Key Create(byte[] password, Options options)
         {
-            var key = Rfc2898DeriveBytes.Pbkdf2(
-                password,
-                options.Salt,
-                options.Iterations,
-                options.HashAlgorithm,
-                options.KeyLength);
-            
             return new()
             {
                 Options = options,
-                Value = key
+                Value = Rfc2898DeriveBytes.Pbkdf2(
+                    password,
+                    options.Salt,
+                    options.Iterations,
+                    options.HashAlgorithm,
+                    options.KeyLength)
             };
         }
 
@@ -122,43 +86,7 @@ public static class Pbkdf2
         public static Key Create(string password, Options options, Encoding encoding) =>
             Create(encoding.GetBytes(password), options);
 
-        public static Key Parse(string value)
-        {
-            var parts = value.Split('.');
-
-            if (parts.Length != 5)
-            {
-                throw new FormatException("Invalid PBKDF2 key!");
-            }
-            
-            var options = Options.Parse(string.Join(".", parts[..4]));
-            var key = Convert.FromBase64String(parts[4]);
-
-            return new()
-            {
-                Options = options,
-                Value = key
-            };
-        }
-        
-        public static bool TryParse(string value, out Key? output)
-        {
-            try
-            {
-                output = Parse(value);
-                return true;
-            }
-            catch
-            {
-                output = null;
-                return false;
-            }
-        }
-        
-        public static implicit operator string(Key value) => value.ToString();
         public static implicit operator byte[](Key value) => value.Value;
-        
-        public override string ToString() => string.Join(".", Options.ToString(), Convert.ToBase64String(Value));
 
         public bool Verify(byte[] password)
         {
@@ -168,5 +96,20 @@ public static class Pbkdf2
         }
 
         public bool Verify(string password, Encoding encoding) => Verify(encoding.GetBytes(password));
+
+        public string Serialize()
+        {
+            var jsonString = JsonSerializer.Serialize(this);
+            
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(jsonString));
+        }
+
+        public static Key Deserialize(string value)
+        {
+            var jsonString = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+            
+            return JsonSerializer.Deserialize<Key>(jsonString)
+                   ?? throw new FormatException("Invalid PBKDF2 key!");
+        }
     }
 }

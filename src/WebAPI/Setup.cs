@@ -9,6 +9,7 @@ public static class Setup
     public static void MapEndpoints(this WebApplication app)
     {
         CreateNote.MapEndpoint(app);
+        ReadNote.MapEndpoint(app);
     }
     
     public static void MigrateDatabase(this WebApplication app)

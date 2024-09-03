@@ -2,6 +2,6 @@ namespace Cryptic.Shared.Common.Primitives;
 
 public abstract record Result<T>
 {
-    public record Success(T Value) : Result<T>;
-    public record Failure(Error Error) : Result<T>;
+    public record Ok(T Value) : Result<T>;
+    public record Fail(CodedError Error) : Result<T>;
 }

@@ -1,4 +1,3 @@
-using Cryptic.Shared.Features.Notes.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cryptic.Shared.Persistence;
@@ -11,8 +10,8 @@ public static class DependencyInjection
         {
             o.Configure(dbConnectionString);
         });
-
-        services.AddScoped<INoteRepository, NoteRepository>();
+        
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         
         return services;
     }

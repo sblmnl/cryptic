@@ -14,13 +14,13 @@ public static class CreateNote
         public required string ControlToken { get; init; }
     }
 
-    public static IResult HandleFailure(Result<CreateNoteResponse>.Failure failureResult)
+    public static IResult HandleFailure(Result<CreateNoteResponse>.Fail failureResult)
     {
         if (failureResult.Error == CreateNoteErrors.DeleteAfterAlreadyPassed)
         {
             return Results.BadRequest(new ApiResponseBody
             {
-                Errors = [ failureResult.Error ]
+                Errors = [ CreateNoteErrors.DeleteAfterAlreadyPassed ]
             });
         }
 
@@ -38,13 +38,13 @@ public static class CreateNote
         };
         
         var result = await sender.Send(command, ctx.RequestAborted);
-        
-        if (result is Result<CreateNoteResponse>.Failure failureResult)
+
+        if (result is Result<CreateNoteResponse>.Fail failureResult)
         {
             return HandleFailure(failureResult);
         }
         
-        var response = (result as Result<CreateNoteResponse>.Success)!.Value;
+        var response = (result as Result<CreateNoteResponse>.Ok)!.Value;
         var note = response.Note;
         
         return Results.Created(new Uri(note.Id.ToString(), UriKind.Relative), new ApiResponseBody

@@ -13,27 +13,27 @@ public record HalgName
     public static readonly HalgName SHA3_384 = new("SHA3-384", HashAlgorithmName.SHA3_384);
     public static readonly HalgName SHA3_512 = new("SHA3-512", HashAlgorithmName.SHA3_512);
 
-    public static readonly IReadOnlyDictionary<string, HalgName> Available = new Dictionary<string, HalgName>()
-    {
-        { "MD5", MD5 },
-        { "SHA1", SHA1 },
-        { "SHA256", SHA256 },
-        { "SHA384", SHA384 },
-        { "SHA512", SHA512 },
-        { "SHA3-256", SHA3_256 },
-        { "SHA3-384", SHA3_384 },
-        { "SHA3-512", SHA3_512 }
-    };
+    public static readonly IList<HalgName> Available =
+    [
+        MD5,
+        SHA1,
+        SHA256,
+        SHA384,
+        SHA512,
+        SHA3_256,
+        SHA3_384,
+        SHA3_512
+    ];
     
     public string Name { get; } = "SHA256";
-    public HashAlgorithmName HashAlgorithmName { get; } = HashAlgorithmName.SHA256;
+    public HashAlgorithmName Algorithm { get; } = HashAlgorithmName.SHA256;
 
-    private HalgName() { }
+    public HalgName() { }
 
-    private HalgName(string name, HashAlgorithmName hashAlgorithmName)
+    public HalgName(string name, HashAlgorithmName algorithm)
     {
         Name = name;
-        HashAlgorithmName = hashAlgorithmName;
+        Algorithm = algorithm;
     }
 
     public override string ToString()
@@ -41,9 +41,10 @@ public record HalgName
         return Name;
     }
     
-    public static HalgName Parse(string value)
+    public static HalgName Parse(string? value)
     {
-        var halgName = Available.GetValueOrDefault(value.ToUpper());
+        var halgName = Available.FirstOrDefault(x =>
+            string.Equals(x.Name, value, StringComparison.CurrentCultureIgnoreCase));
         
         if (halgName is null)
         {
@@ -53,32 +54,7 @@ public record HalgName
         return halgName;
     }
     
-    public static bool TryParse(string value, out HalgName? output)
-    {
-        try
-        {
-            output = Parse(value);
-            return true;
-        }
-        catch
-        {
-            output = null;
-            return false;
-        }
-    }
-
-    public static implicit operator HashAlgorithmName(HalgName halgName)
-    {
-        return halgName.HashAlgorithmName;
-    }
-
-    public static implicit operator HalgName(HashAlgorithmName hashAlgorithmName)
-    {
-        return Parse(hashAlgorithmName.Name ?? string.Empty);
-    }
-
-    public static implicit operator string(HalgName value)
-    {
-        return value.ToString();
-    }
+    public static implicit operator HashAlgorithmName(HalgName halgName) => halgName.Algorithm;
+    public static implicit operator HalgName(HashAlgorithmName hashAlgorithmName) => Parse(hashAlgorithmName.Name);
+    public static implicit operator string(HalgName value) => value.ToString();
 }

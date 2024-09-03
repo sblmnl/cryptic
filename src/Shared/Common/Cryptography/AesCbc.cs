@@ -8,13 +8,13 @@ public static class AesCbc
     {
         using var ms = new MemoryStream();
         using var cs = new CryptoStream(ms, transform, CryptoStreamMode.Write);
-        
+
         cs.Write(data, 0, data.Length);
         cs.FlushFinalBlock();
         
         return ms.ToArray();
     }
-    
+
     public static byte[] Encrypt(byte[] data, byte[] key, byte[] iv)
     {
         using var aes = Aes.Create();
@@ -30,42 +30,25 @@ public static class AesCbc
         
         return decryptor.Transform(data);
     }
+    
+    public static byte[] Decrypt(byte[] data, byte[] key)
+    {
+        var iv = data[..16];
+        var ct = data[16..];
+
+        return Decrypt(ct, key, iv);
+    }
 
     public static byte[] Encrypt(byte[] data, byte[] key)
     {
-        var iv = new byte[16];
-        RandomNumberGenerator.Fill(iv);
-
+        var iv = RandomNumberGenerator.GetBytes(16);
         var ct = Encrypt(data, key, iv);
-
+        
         var encrypted = new byte[iv.Length + ct.Length];
 
         Buffer.BlockCopy(iv, 0, encrypted, 0, iv.Length);
         Buffer.BlockCopy(ct, 0, encrypted, iv.Length, ct.Length);
         
         return encrypted;
-    }
-
-    public static bool TryDecrypt(byte[] data, byte[] key, out byte[]? output)
-    {
-        if (data.Length <= 16)
-        {
-            output = null;
-            return false;
-        }
-
-        try
-        {
-            var iv = data[..16];
-            var ct = data[iv.Length..];
-            
-            output = Decrypt(ct, key, iv);
-            return true;
-        }
-        catch
-        {
-            output = null;
-            return false;
-        }
     }
 }

@@ -1,12 +1,13 @@
 using Cryptic.Shared.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Cryptic.Shared.Features.Notes.Persistence;
+namespace Cryptic.Shared.Features.Notes;
 
 public interface INoteRepository
 {
     Task AddNoteAsync(Domain.Note note, CancellationToken ct);
-    Task RemoveNoteAsync(Domain.Note note, CancellationToken ct);
+    void RemoveNote(Domain.Note note);
     Task<Domain.Note?> GetNoteByIdAsync(Guid noteId, CancellationToken ct);
 }
 
@@ -22,19 +23,17 @@ public class NoteRepository : INoteRepository
     public async Task AddNoteAsync(Domain.Note note, CancellationToken ct)
     {
         await _db.Notes.AddAsync(note.ToStorageType(), ct);
-        await _db.SaveChangesAsync(ct);
     }
 
-    public Task RemoveNoteAsync(Domain.Note note, CancellationToken ct)
+    public void RemoveNote(Domain.Note note)
     {
-        return _db.Notes
-            .Where(x => x.Id == note.Id)
-            .ExecuteDeleteAsync(ct);
+        _db.Notes.Remove(note.ToStorageType());
     }
 
     public async Task<Domain.Note?> GetNoteByIdAsync(Guid noteId, CancellationToken ct)
     {
-        var rawNote = await _db.Notes.AsNoTracking()
+        var rawNote = await _db.Notes
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == noteId, ct);
 
         var note = rawNote?.ToDomainType();

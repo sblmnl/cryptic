@@ -1,14 +1,16 @@
-using Cryptic.Shared.Features.Notes.Persistence;
+using Cryptic.Shared.Persistence;
 
 namespace Cryptic.Shared.Features.Notes.CreateNote;
 
 public class CreateNoteCommandHandler : IRequestHandler<CreateNoteCommand, Result<CreateNoteResponse>>
 {
     private readonly INoteRepository _noteRepository;
-    
-    public CreateNoteCommandHandler(INoteRepository noteRepository)
+    private readonly IUnitOfWork _unitOfWork;
+
+    public CreateNoteCommandHandler(INoteRepository noteRepository, IUnitOfWork unitOfWork)
     {
         _noteRepository = noteRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<CreateNoteResponse>> Handle(CreateNoteCommand command, CancellationToken ct)
@@ -18,30 +20,31 @@ public class CreateNoteCommandHandler : IRequestHandler<CreateNoteCommand, Resul
             Receipt = command.DeleteOnReceipt,
             Time = command.DeleteAfterTime
         };
-        
+
         if (deleteAfter.Time <= DateTimeOffset.UtcNow)
         {
-            return new Result<CreateNoteResponse>.Failure(CreateNoteErrors.DeleteAfterAlreadyPassed);
+            return new Result<CreateNoteResponse>.Fail(CreateNoteErrors.DeleteAfterAlreadyPassed);
         }
 
         var controlToken = ControlToken.Create();
         var controlTokenHash = Pbkdf2.Key.Create(controlToken.Value);
 
-        var unprotectedNote = new Domain.Note.Unprotected
+        Domain.NoteContent noteContent = command.Password is null
+            ? new Domain.NoteContent.Plaintext { Value = command.Content }
+            : Domain.NoteContent.Encrypted.Create(command.Content, command.Password);
+
+        var note = new Domain.Note
         {
             Id = Guid.NewGuid(),
-            Content = command.Content,
+            Content = noteContent,
             DeleteAfter = deleteAfter,
             ControlTokenHash = controlTokenHash
         };
-        
-        Domain.Note note = command.Password is not null
-            ? unprotectedNote.Encrypt(command.Password)
-            : unprotectedNote;
 
         await _noteRepository.AddNoteAsync(note, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-        return new Result<CreateNoteResponse>.Success(new()
+        return new Result<CreateNoteResponse>.Ok(new()
         {
             Note = note,
             ControlToken = controlToken.ToString()
