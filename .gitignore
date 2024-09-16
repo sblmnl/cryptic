@@ -1,8 +1,10 @@
 # ide configuration
-**/.vscode/*
-!**/.vscode/extensions.json
+**/.vscode
 **/.idea
 **/*.DotSettings.*
 
 # secrets
 **/.env
+
+# node stuff
+node_modules

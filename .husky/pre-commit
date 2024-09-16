@@ -1,0 +1,8 @@
+# perform client pre-commit hook actions
+
+cd client
+
+npm run format --staged
+npm run lint
+
+cd ..
