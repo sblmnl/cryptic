@@ -22,8 +22,8 @@ services:
       
   webapi:
     build:
-      context: ./src
-      dockerfile: ./WebAPI/Dockerfile
+      context: ./server
+      dockerfile: ./src/WebAPI/Dockerfile
     container_name: cryptic-webapi
     volumes:
       - ${CERT_HOST_DIR}/${CERT_FILE}:/https/${CERT_FILE}

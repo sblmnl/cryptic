@@ -1,16 +1,8 @@
 # ide configuration
-**/.vscode
+**/.vscode/*
+!**/.vscode/extensions.json
 **/.idea
 **/*.DotSettings.*
 
-# build artifacts
-**/obj
-**/bin
-
-# development environment
+# secrets
 **/.env
-
-# WebUI artificats/build outputs
-node_modules/
-.fable-build/
-dist/
