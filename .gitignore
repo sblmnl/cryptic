@@ -28,6 +28,3 @@ lerna-debug.log*
 # misc
 .DS_Store
 *.DotSettings.user
-
-# dev files
-.dev/ssl

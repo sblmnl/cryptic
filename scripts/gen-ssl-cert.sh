@@ -1,4 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+# change dir to repo root
+WORKING_DIR=$(pwd)
+SCRIPT_DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+
+cd $SCRIPT_DIR/..
 
 # create .dev directory
 [ ! -d .dev ] && mkdir .dev
@@ -36,3 +42,6 @@ openssl genrsa -out .dev/ssl/localhost.key
 openssl req -new -key .dev/ssl/localhost.key -out .dev/ssl/localhost.csr -config .dev/ssl/localhost.conf
 openssl x509 -req -in .dev/ssl/localhost.csr -signkey .dev/ssl/localhost.key -out .dev/ssl/localhost.crt -extensions req_ext -extfile .dev/ssl/localhost.conf
 openssl pkcs12 -export -out .dev/ssl/localhost.pfx -inkey .dev/ssl/localhost.key -in .dev/ssl/localhost.crt -passout pass:password
+
+# change dir back to working dir
+cd $WORKING_DIR
