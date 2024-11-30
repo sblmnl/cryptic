@@ -10,6 +10,9 @@ bin/
 obj/
 wwwroot/
 
+# vite
+.vite/
+
 # packages
 node_modules/
 
