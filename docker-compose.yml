@@ -3,8 +3,6 @@ services:
     image: postgres:16.1-alpine
     container_name: cryptic-db
     volumes:
-      #- ./.dev/ssl/localhost.key:/var/lib/postgresql/localhost.key
-      #- ./.dev/ssl/localhost.crt:/var/lib/postgresql/localhost.crt
       - cryptic-db:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=postgres
@@ -12,7 +10,6 @@ services:
       - POSTGRES_DB=cryptic
     ports: 
       - 5432:5432
-    #command: postgres -c ssl=on -c ssl_cert_file=/var/lib/postgresql/localhost.crt -c ssl_key_file=/var/lib/postgresql/localhost.key
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'"]
       interval: 10s
@@ -46,4 +43,4 @@ services:
       - app
 
 volumes:
-  cryptic-db:
+  cryptic-db: {}
