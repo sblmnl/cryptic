@@ -4,6 +4,15 @@ Utility for securely sharing notes over the web
 
 ## Getting Started
 
+### Development Environment Setup
+
+Prerequisites:
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [Node.js](https://nodejs.org)
+
+Run `npm install` in the root of the repository to enable git hooks.
+
 ### Running the Application
 
 #### Docker Profiles
