@@ -1,8 +1,6 @@
-# perform client pre-commit hook actions
-
-cd client
+cd src/Cryptic.Web/ClientApp
 
 npm run format --staged
 npm run lint
 
-cd ..
+cd ../../..

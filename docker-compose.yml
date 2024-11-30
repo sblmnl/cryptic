@@ -3,46 +3,47 @@ services:
     image: postgres:16.1-alpine
     container_name: cryptic-db
     volumes:
+      #- ./.dev/ssl/localhost.key:/var/lib/postgresql/localhost.key
+      #- ./.dev/ssl/localhost.crt:/var/lib/postgresql/localhost.crt
       - cryptic-db:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cryptic
     ports: 
       - 5432:5432
+    #command: postgres -c ssl=on -c ssl_cert_file=/var/lib/postgresql/localhost.crt -c ssl_key_file=/var/lib/postgresql/localhost.key
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'"]
       interval: 10s
       timeout: 3s
       retries: 5
     profiles:
-      - full
-      - api
+      - app
       - ""
       
-  webapi:
+  server:
     build:
-      context: ./server
-      dockerfile: ./src/WebAPI/Dockerfile
-    container_name: cryptic-webapi
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: cryptic-web
     volumes:
-      - ${CERT_HOST_DIR}/${CERT_FILE}:/https/${CERT_FILE}
+      - ./.dev/ssl/localhost.pfx:/https/localhost.pfx
     environment:
-      - ASPNETCORE_ENVIRONMENT=${APP_ENVIRONMENT}
-      - ASPNETCORE_HTTP_PORTS=${WEBAPI_HTTP_PORT}
-      - ASPNETCORE_HTTPS_PORTS=${WEBAPI_HTTPS_PORT}
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/${CERT_FILE}
-      - ConnectionStrings__Database=Server=db;Port=5432;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5000
+      - ASPNETCORE_HTTPS_PORTS=5001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      - ConnectionStrings__Database=Server=db;Port=5432;Database=cryptic;User Id=postgres;Password=password
     ports:
-      - ${WEBAPI_HTTP_PORT}:${WEBAPI_HTTP_PORT}
-      - ${WEBAPI_HTTPS_PORT}:${WEBAPI_HTTPS_PORT}
+      - 5000:5000
+      - 5001:5001
     depends_on:
       db:
         condition: service_healthy
     profiles:
-      - full
-      - api
+      - app
 
 volumes:
   cryptic-db:
