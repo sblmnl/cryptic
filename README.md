@@ -6,7 +6,12 @@ Utility for securely sharing notes over the web
 
 ### Development Environment Setup
 
-Run `./init.sh` (Mac/Linux) or `./init.ps1` (Windows).
+Prerequisites:
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [Node.js](https://nodejs.org)
+
+Run `npm install` in the root of the repository to enable git hooks.
 
 ### Running the Application
 
@@ -18,14 +23,8 @@ Only runs the infrastructure services. This allows the application to be run loc
 Command:  
 `docker compose up`  
 
-**Full Stack (full)**  
+**Web Application (app)**  
 Runs the full stack application and all necessary services.
 
 Command:  
-`docker compose --profile full up`  
-
-**Web API Only (api)**  
-Runs the web API and all necessary services.
-
-Command:  
-`docker compose --profile api up`  
+`docker compose --profile app up`

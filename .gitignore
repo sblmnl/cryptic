@@ -1,11 +1,30 @@
 # ide configuration
-**/.vscode
-**/.idea
-**/*.DotSettings.*
+.vscode
+.idea
 
-# build artifacts
-**/obj
-**/bin
+# secrets
+.env
 
-# development environment
-**/.env
+# build files
+bin/
+obj/
+wwwroot/
+
+# packages
+node_modules/
+
+# local files
+*.local
+
+# logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# misc
+.DS_Store
+*.DotSettings.user
