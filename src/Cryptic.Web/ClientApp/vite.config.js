@@ -1,17 +1,17 @@
 import Vue from "@vitejs/plugin-vue";
+
 // Plugins
 import AutoImport from "unplugin-auto-import/vite";
 import Fonts from "unplugin-fonts/vite";
 import Components from "unplugin-vue-components/vite";
 import VueRouter from "unplugin-vue-router/vite";
-import Layouts from "vite-plugin-vue-layouts";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
-import fs from "node:fs";
-import { env } from "node:process";
-import { URL, fileURLToPath } from "node:url";
 // Utilities
+import { env } from "node:process";
 import { defineConfig } from "vite";
+import { URL, fileURLToPath } from "node:url";
+import fs from "node:fs";
 
 const target = env.ASPNETCORE_HTTPS_PORT
   ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
@@ -25,7 +25,6 @@ const useHttps = target.startsWith("https");
 export default defineConfig({
   plugins: [
     VueRouter(),
-    Layouts(),
     Vue({
       template: { transformAssetUrls },
     }),
