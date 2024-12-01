@@ -19,7 +19,7 @@ services:
       - app
       - ""
       
-  server:
+  web:
     build:
       context: .
       dockerfile: ./Dockerfile

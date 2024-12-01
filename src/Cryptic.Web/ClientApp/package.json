@@ -1,8 +1,8 @@
 {
-  "name": "client",
+  "name": "cryptic",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -13,11 +13,24 @@
     "check:fix": "biome check --write"
   },
   "dependencies": {
-    "vue": "^3.5.13"
+    "@mdi/font": "7.4.47",
+    "roboto-fontface": "*",
+    "vue": "^3.4.31",
+    "vuetify": "^3.6.14"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@vitejs/plugin-vue": "^5.2.1",
-    "vite": "^6.0.1"
+    "@vitejs/plugin-vue": "^5.0.5",
+    "pinia": "^2.1.7",
+    "sass": "1.77.8",
+    "sass-embedded": "^1.77.8",
+    "unplugin-auto-import": "^0.17.6",
+    "unplugin-fonts": "^1.1.1",
+    "unplugin-vue-components": "^0.27.2",
+    "unplugin-vue-router": "^0.10.0",
+    "vite": "^5.4.0",
+    "vite-plugin-vue-layouts": "^0.11.0",
+    "vite-plugin-vuetify": "^2.0.3",
+    "vue-router": "^4.4.0"
   }
 }
