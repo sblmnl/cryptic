@@ -8,7 +8,7 @@
 # build files
 bin/
 obj/
-wwwroot/
+dist/
 
 # vite
 .vite/
