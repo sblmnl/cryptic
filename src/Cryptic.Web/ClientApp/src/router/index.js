@@ -3,7 +3,7 @@ import { routes } from "vue-router/auto-routes";
 
 routes.push({
   path: "/",
-  redirect: "/notes"
+  redirect: "/notes",
 });
 
 const router = createRouter({
