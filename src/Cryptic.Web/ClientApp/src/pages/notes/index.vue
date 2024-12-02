@@ -57,7 +57,7 @@ export default {
       this.password = passwordGenerator.generate({
         length: 16,
         numbers: true,
-        symbols: true
+        symbols: true,
       });
     },
     resetForm() {
