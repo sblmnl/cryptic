@@ -15,6 +15,16 @@ const githubDarkTheme = {
     info: "#58a6ff",
     success: "#3fb950",
     warning: "#d29922",
+    text: "#ffffff",
+    "text-alt": "#b1bac4",
+    gray: "#484f58",
+    red: "#ff7b72",
+    green: "#3fb950",
+    yellow: "#d29922",
+    blue: "#58a6ff",
+    purple: "#bc8cff",
+    cyan: "#39c5cf",
+    white: "#ffffff",
   },
 };
 
