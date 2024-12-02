@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer>
+  <v-navigation-drawer expand-on-hover rail>
     <v-list>
       <router-link to="/" class="nav-logo">
         <v-list-item prepend-avatar="/logo.svg" title="Cryptic"></v-list-item>
