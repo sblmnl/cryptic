@@ -57,39 +57,34 @@ export default {
       this.password = passwordGenerator.generate({
         length: 16,
         numbers: true,
-        symbols: true
+        symbols: true,
       });
     },
     resetForm() {
       this.content = "";
       this.password = "";
       this.deleteAfter = this.deleteAfterDefault;
-    }
+    },
   },
   data: () => ({
     content: "",
     contentRules: [
-      value => {
+      (value) => {
         if (value) return true;
 
         return "Note cannot be empty!";
       },
-      value => {
+      (value) => {
         if (value?.length <= 5_000) return true;
 
         return "Note cannot contain more than 5,000 characters!";
-      }
+      },
     ],
     deleteAfterDefault: "Reading",
     deleteAfter: "Reading",
-    deleteAfterOptions: [
-      "Reading",
-      "An hour",
-      "A day",
-      "A week"
-    ],
+    deleteAfterOptions: ["Reading", "An hour", "A day", "A week"],
     password: "",
-    showPassword: false
+    showPassword: false,
   }),
-}
+};
 </script>
