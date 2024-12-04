@@ -1,6 +1,6 @@
 cd src/Cryptic.Web/ClientApp
 
-npm run check:fix -- --staged --files-ignore-unknown=true --no-errors-on-unmatched
-git update-index --again
+npm run lint
+npm run format:staged
 
 cd ../../..
