@@ -8,23 +8,23 @@ Utility for securely sharing notes over the web
 
 Prerequisites:
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 - [Node.js](https://nodejs.org)
 
-Run `npm install` in the root of the repository to enable git hooks.
+Run the `init.sh` (Linux/Mac) or `init.ps1` (Windows) to initialize the development environment for the project.
 
 ### Running the Application
 
 #### Docker Profiles
 
-**Infrastructure Only**  
+**Infrastructure Only**
 Only runs the infrastructure services. This allows the application to be run locally and debugged in your IDE.
 
-Command:  
-`docker compose up`  
+Command:
+`docker compose up`
 
-**Web Application (app)**  
+**Web Application (app)**
 Runs the full stack application and all necessary services.
 
-Command:  
+Command:
 `docker compose --profile app up`

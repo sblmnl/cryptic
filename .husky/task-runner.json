@@ -1,0 +1,11 @@
+{
+  "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+  "tasks": [
+    {
+      "name": "lint-and-format-client",
+      "cwd": "client",
+      "command": "npx",
+      "args": ["lint-staged"]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2043BD9-0DCC-41B2-91E5-2C5280DAF994}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		.globalconfig = .globalconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+		init.ps1 = init.ps1
+		init.sh = init.sh
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2132E9AA-A8A6-6DB3-1CCB-FE240A8CB002}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A225F024-74F6-4828-AC06-004C7A813C7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptic.Core", "server\src\Cryptic.Core\Cryptic.Core.csproj", "{FC9576D5-41D3-424E-B2F6-B532F179F4D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptic.Web.Server", "server\src\Cryptic.Web.Server\Cryptic.Web.Server.csproj", "{C84146E8-A248-4CE2-A7F1-4A824D624D27}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Release|x64.Build.0 = Release|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6}.Release|x86.Build.0 = Release|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Debug|x64.Build.0 = Debug|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Debug|x86.Build.0 = Debug|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Release|x64.ActiveCfg = Release|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Release|x64.Build.0 = Release|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Release|x86.ActiveCfg = Release|Any CPU
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FC9576D5-41D3-424E-B2F6-B532F179F4D6} = {2132E9AA-A8A6-6DB3-1CCB-FE240A8CB002}
+		{C84146E8-A248-4CE2-A7F1-4A824D624D27} = {2132E9AA-A8A6-6DB3-1CCB-FE240A8CB002}
+	EndGlobalSection
+EndGlobal

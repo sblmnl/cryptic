@@ -1,0 +1,6 @@
+{
+  "endOfLine": "lf",
+  "printWidth": 120,
+  "plugins": ["prettier-plugin-organize-imports"],
+  "organizeImportsSkipDestructiveCodeActions": true
+}
