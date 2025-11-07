@@ -1,20 +1,28 @@
 # ide configuration
-.vscode
-.idea
+.vscode/
+.idea/
+.vs/
+*.code-workspace
+!cryptic.code-workspace
 
-# secrets
+# .env files
 .env
+.env.*
+!.env.example
+
+# local-only appsettings
+appsettings.Local.json
 
 # build files
 bin/
 obj/
-wwwroot/
+dist/
+
+# vite
+.vite/
 
 # packages
 node_modules/
-
-# local files
-*.local
 
 # logs
 logs/
@@ -25,6 +33,20 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# publish profiles
+*.pubxml
+
+# user-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
 # misc
 .DS_Store
-*.DotSettings.user
+
+# rest client
+*.http
+*.rest

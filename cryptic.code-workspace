@@ -1,0 +1,125 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "extensions": {
+    "recommendations": [
+      "ms-dotnettools.csharp",
+      "ms-dotnettools.csdevkit",
+      "vue.volar",
+      "editorconfig.editorconfig",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode"
+    ]
+  },
+  "settings": {
+    "editor.rulers": [120],
+    "[javascript][typescript][vue][html][css][scss][json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    }
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Clean Solution",
+        "command": "dotnet",
+        "type": "process",
+        "args": ["clean", "${workspaceFolder}"],
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "Build Solution",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary;ForceNoAlign"
+        ],
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "Publish Solution",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "publish",
+          "${workspaceFolder}",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary;ForceNoAlign"
+        ],
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "Clean (Cryptic.Web.Server)",
+        "command": "dotnet",
+        "type": "process",
+        "args": ["clean", "${workspaceFolder}/server/src/Cryptic.Web.Server"],
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "Build (Cryptic.Web.Server)",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/server/src/Cryptic.Web.Server",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary;ForceNoAlign"
+        ],
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "Publish (Cryptic.Web.Server)",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "publish",
+          "${workspaceFolder}/server/src/Cryptic.Web.Server",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary;ForceNoAlign"
+        ],
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "Watch (Cryptic.Web.Server)",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "watch",
+          "run",
+          "--project",
+          "${workspaceFolder}/server/src/Cryptic.Web.Server"
+        ],
+        "problemMatcher": "$msCompile"
+      }
+    ]
+  },
+  "launch": {
+    "version": "2.0.0",
+    "configurations": [
+      {
+        "name": ".NET Core Launch (Cryptic.Web.Server)",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "Build (Cryptic.Web.Server)",
+        "program": "${workspaceFolder}/server/src/Cryptic.Web.Server/bin/Debug/net9.0/Cryptic.Web.Server.dll",
+        "args": [],
+        "cwd": "${workspaceFolder}/server/src/Cryptic.Web.Server",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    ]
+  }
+}
