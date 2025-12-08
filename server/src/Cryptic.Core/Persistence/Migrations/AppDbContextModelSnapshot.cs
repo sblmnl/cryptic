@@ -28,10 +28,15 @@ namespace Cryptic.Core.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("ClientMetadata")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)")
+                        .HasColumnName("client_metadata");
+
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("character varying(5000)")
+                        .HasMaxLength(16384)
+                        .HasColumnType("character varying(16384)")
                         .HasColumnName("content");
 
                     b.Property<string>("ControlTokenHash")

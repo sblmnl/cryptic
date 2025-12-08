@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { env } from "node:process";
 import { defineConfig, loadEnv, type ProxyOptions } from "vite";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const target = "https://localhost:5001";
 
@@ -48,7 +49,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     base,
-    plugins: [vue()],
+    build: {
+      target: "esnext",
+    },
+    plugins: [vue(), nodePolyfills()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

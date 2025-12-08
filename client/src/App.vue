@@ -1,8 +1,10 @@
 <template>
-  <DefaultAppLayout v-if="$route.meta.layout === AppLayout.Default">
-    <RouterView />
-  </DefaultAppLayout>
-  <RouterView v-if="$route.meta.layout === AppLayout.None" />
+  <v-app>
+    <DefaultAppLayout v-if="$route.meta.layout === AppLayout.Default">
+      <RouterView />
+    </DefaultAppLayout>
+    <RouterView v-if="$route.meta.layout === AppLayout.None" />
+  </v-app>
 </template>
 
 <script setup lang="ts">

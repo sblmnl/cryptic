@@ -8,6 +8,8 @@ declare module "vue-router" {
   }
 }
 
+export const appBaseUrl = window.location.protocol + "//" + window.location.host;
+
 export function getAppRoute(rootRelativeRoute: string) {
   const pathBase = import.meta.env.VITE_APP_PATH_BASE;
 
@@ -24,6 +26,10 @@ const router = createRouter({
     {
       path: "/",
       component: () => import("@/core/pages/HomePage.vue"),
+    },
+    {
+      path: "/notes",
+      component: () => import("@/modules/notes/pages/CreateNotePage.vue"),
     },
     {
       path: "/:catchAll(.*)",

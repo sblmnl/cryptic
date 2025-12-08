@@ -1,7 +1,7 @@
 <template>
-  <WelcomeMessage />
+  <CreateNotePage />
 </template>
 
 <script setup lang="ts">
-import WelcomeMessage from "@/core/components/WelcomeMessage.vue";
+import CreateNotePage from "@/modules/notes/pages/CreateNotePage.vue";
 </script>
