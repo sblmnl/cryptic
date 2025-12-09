@@ -1,33 +1,21 @@
 using Cryptic.Core.Notes.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using StronglyTypedIds;
 
 namespace Cryptic.Core.Notes;
 
-[JsonConverter(typeof(NoteIdJsonConverter))]
-public readonly record struct NoteId(Guid Value)
-{
-    public static NoteId NewNoteId() => new(Guid.NewGuid());
-}
-
-public class NoteIdJsonConverter : JsonConverter<NoteId>
-{
-    public override NoteId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        new(reader.GetGuid());
-
-    public override void Write(Utf8JsonWriter writer, NoteId value, JsonSerializerOptions options) =>
-        writer.WriteStringValue(value.Value);
-}
+[StronglyTypedId]
+public readonly partial struct NoteId { }
 
 public class Note
 {
-    public NoteId Id { get; } = NoteId.NewNoteId();
+    public NoteId Id { get; } = NoteId.New();
     public required string Content { get; init; }
     public required DeleteAfter DeleteAfter { get; init; }
     public required ControlTokenHash ControlTokenHash { get; init; }
     public PasswordHash? PasswordHash { get; init; }
+    public string? ClientMetadata { get; init; }
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
     private Note() { }
@@ -53,16 +41,22 @@ public class Note
         string content,
         DeleteAfter deleteAfter,
         ControlTokenHash controlTokenHash,
-        PasswordHash? passwordHash)
+        PasswordHash? passwordHash,
+        string? clientMetadata)
     {
         if (string.IsNullOrWhiteSpace(content) || content.Length < 3)
         {
             return Result.Fail(new NoteContentTooShortError());
         }
 
-        if (content.Length > 5000)
+        if (content.Length > 16_384)
         {
             return Result.Fail(new NoteContentTooLongError());
+        }
+
+        if (clientMetadata is not null && clientMetadata.Length > 1_024)
+        {
+            return Result.Fail(new NoteClientMetadataTooLongError());
         }
 
         return Result.Ok(new Note
@@ -71,6 +65,7 @@ public class Note
             DeleteAfter = deleteAfter,
             ControlTokenHash = controlTokenHash,
             PasswordHash = passwordHash,
+            ClientMetadata = clientMetadata,
         });
     }
 }
@@ -85,7 +80,7 @@ internal sealed class NoteConfiguration : IEntityTypeConfiguration<Note>
             .HasConversion(x => x.Value, x => new NoteId(x));
 
         entityBuilder.Property(x => x.Content)
-            .HasMaxLength(5000);
+            .HasMaxLength(16_384);
 
         entityBuilder.Property(x => x.ControlTokenHash)
             .HasConversion(
@@ -96,5 +91,8 @@ internal sealed class NoteConfiguration : IEntityTypeConfiguration<Note>
             .HasConversion(
                 x => x != null ? x.Serialize() : null,
                 x => x != null ? PasswordHash.Deserialize(x) : null);
+
+        entityBuilder.Property(x => x.ClientMetadata)
+            .HasMaxLength(1_024);
     }
 }

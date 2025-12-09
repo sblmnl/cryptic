@@ -16,6 +16,13 @@ internal sealed class ExceptionHandlerMiddleware : IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
+        if (exception is BadHttpRequestException)
+        {
+            var response = HttpResponses.Fail(new BadRequestError(exception.Message), StatusCodes.Status400BadRequest);
+            await response.ExecuteAsync(httpContext);
+            return true;
+        }
+
         _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
         await HttpResponses.InternalError.ExecuteAsync(httpContext);
         return true;

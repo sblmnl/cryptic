@@ -14,4 +14,9 @@ export default tseslint.config(
   pluginVue.configs["flat/essential"],
   defineConfigWithVueTs(vueTsConfigs.recommended),
   eslintConfigPrettier,
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
 );

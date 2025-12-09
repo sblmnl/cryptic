@@ -5,12 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cryptic.Web.Server.Notes.Endpoints;
 
-public class DestroyNoteHttpRequest
-{
-    public NoteId NoteId { get; init; }
-    public string? ControlToken { get; init; }
-}
-
 public static class DestroyNoteHttpEndpoint
 {
     private static IResult HandleFailure(Result result)
@@ -31,23 +25,26 @@ public static class DestroyNoteHttpEndpoint
     }
 
     public static async Task<IResult> HandleRequest(
-        [FromBody] DestroyNoteHttpRequest request,
+        [FromRoute] Guid id,
+        [FromQuery] string? controlToken,
         [FromServices] ICommandMediator mediator,
         HttpContext ctx)
     {
-        if (request.ControlToken is null
-            || !ControlToken.TryParse(request.ControlToken, out var controlToken)
-            || controlToken is null)
+        var noteId = new NoteId(id);
+
+        if (controlToken is null
+            || !ControlToken.TryParse(controlToken, out var parsedControlToken)
+            || parsedControlToken is null)
         {
             return HttpResponses.Fail(
-                new IncorrectNoteControlTokenError(request.NoteId),
+                new IncorrectNoteControlTokenError(noteId),
                 StatusCodes.Status403Forbidden);
         }
 
         var command = new DestroyNoteCommand
         {
-            NoteId = request.NoteId,
-            ControlToken = controlToken,
+            NoteId = noteId,
+            ControlToken = parsedControlToken,
         };
 
         var result = await mediator.SendAsync(command, ctx.RequestAborted);
@@ -57,7 +54,7 @@ public static class DestroyNoteHttpEndpoint
 
     public static void MapDestroyNoteHttpEndpoint(this WebApplication app)
     {
-        app.MapDelete("/api/notes", HandleRequest)
+        app.MapDelete("/api/notes/{id:guid}", HandleRequest)
             .WithName("DestroyNote")
             .Produces<OkHttpResponseBody>()
             .Produces<FailedHttpResponseBody>(StatusCodes.Status404NotFound)

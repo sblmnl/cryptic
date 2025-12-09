@@ -5,12 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cryptic.Web.Server.Notes.Endpoints;
 
-public class ReadNoteHttpRequest
-{
-    public required NoteId NoteId { get; init; }
-    public string? Password { get; init; }
-}
-
 public class ReadNoteHttpResponseBody
 {
     public required NoteId NoteId { get; init; }
@@ -38,14 +32,17 @@ public static class ReadNoteHttpEndpoint
     }
 
     public static async Task<IResult> HandleRequest(
-        [FromBody] ReadNoteHttpRequest request,
+        [FromRoute] Guid id,
+        [FromQuery] string? password,
         [FromServices] ICommandMediator mediator,
         HttpContext ctx)
     {
+        var noteId = new NoteId(id);
+
         var command = new ReadNoteCommand
         {
-            NoteId = request.NoteId,
-            Password = request.Password,
+            NoteId = noteId,
+            Password = password,
         };
 
         var result = await mediator.SendAsync(command, ctx.RequestAborted);
@@ -67,7 +64,7 @@ public static class ReadNoteHttpEndpoint
 
     public static void MapReadNoteHttpEndpoint(this WebApplication app)
     {
-        app.MapPost("/api/notes/read", HandleRequest)
+        app.MapPost("/api/notes/{id:guid}/read", HandleRequest)
             .WithName("ReadNote")
             .Produces<OkHttpResponseBody<ReadNoteHttpResponseBody>>()
             .Produces<FailedHttpResponseBody>(StatusCodes.Status404NotFound)

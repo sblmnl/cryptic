@@ -10,16 +10,21 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "argon2-browser": "^1.18.0",
     "axios": "^1.10.0",
+    "bootstrap": "^5.3.8",
     "luxon": "^3.6.1",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.3.0",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vuetify": "^3.10.9"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/vue": "^8.1.0",
+    "@types/argon2-browser": "^1.18.4",
     "@types/luxon": "^3.6.2",
     "@types/node": "^22.15.18",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
@@ -37,6 +42,7 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
+    "vite-plugin-node-polyfills": "^0.24.0",
     "vitest": "^3.2.4",
     "vue-tsc": "^2.2.8"
   }

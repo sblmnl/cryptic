@@ -9,6 +9,7 @@ public class CreateNoteHttpRequest
     public required string Content { get; init; }
     public DeleteAfter DeleteAfter { get; init; }
     public string? Password { get; init; }
+    public string? ClientMetadata { get; init; }
 }
 
 public class CreateNoteHttpResponseBody
@@ -38,6 +39,7 @@ public static class CreateNoteHttpEndpoint
             Content = request.Content,
             DeleteAfter = request.DeleteAfter,
             Password = request.Password,
+            ClientMetadata = request.ClientMetadata,
         };
 
         var result = await mediator.SendAsync(command, ctx.RequestAborted);

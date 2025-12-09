@@ -11,6 +11,7 @@ public class CreateNoteCommand : ICommand<Result<CreateNoteResponse>>
     public required string Content { get; init; }
     public DeleteAfter DeleteAfter { get; init; }
     public string? Password { get; init; }
+    public string? ClientMetadata { get; init; }
 }
 
 public class CreateNoteCommandHandler : ICommandHandler<CreateNoteCommand, Result<CreateNoteResponse>>
@@ -30,7 +31,12 @@ public class CreateNoteCommandHandler : ICommandHandler<CreateNoteCommand, Resul
         var controlTokenHash = ControlTokenHash.Create(controlToken);
         var passwordHash = message.Password is not null ? PasswordHash.Create(message.Password) : null;
 
-        var result = Note.Create(message.Content, message.DeleteAfter, controlTokenHash, passwordHash);
+        var result = Note.Create(
+            message.Content,
+            message.DeleteAfter,
+            controlTokenHash,
+            passwordHash,
+            message.ClientMetadata);
 
         if (result.IsFailed)
         {

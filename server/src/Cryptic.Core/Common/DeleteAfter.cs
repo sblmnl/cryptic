@@ -2,10 +2,10 @@ namespace Cryptic.Core.Common;
 
 public enum DeleteAfter
 {
-    Viewing,
-    OneHour,
-    OneDay,
-    OneWeek,
+    Viewing = 0,
+    OneHour = 1,
+    OneDay = 2,
+    OneWeek = 3,
 }
 
 public static class DeleteAfterExtensions

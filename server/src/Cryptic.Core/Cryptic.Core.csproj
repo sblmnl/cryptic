@@ -10,6 +10,7 @@
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
       <PackageReference Include="Newtonsoft.Json" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+      <PackageReference Include="StronglyTypedId" />
     </ItemGroup>
 
     <ItemGroup>
