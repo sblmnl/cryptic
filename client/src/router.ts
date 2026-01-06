@@ -32,6 +32,10 @@ const router = createRouter({
       component: () => import("@/modules/notes/pages/CreateNotePage.vue"),
     },
     {
+      path: "/notes/:noteId",
+      component: () => import("@/modules/notes/pages/ReadNotePage.vue"),
+    },
+    {
       path: "/:catchAll(.*)",
       component: () => import("@/core/pages/NotFoundPage.vue"),
     },

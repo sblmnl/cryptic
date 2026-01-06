@@ -8,6 +8,7 @@ public class ReadNoteResponse
     public required NoteId NoteId { get; init; }
     public required string Content { get; init; }
     public required bool Destroyed { get; init; }
+    public string? ClientMetadata { get; init; }
 }
 
 public class ReadNoteCommand : ICommand<Result<ReadNoteResponse>>
@@ -52,6 +53,7 @@ public class ReadNoteCommandHandler : ICommandHandler<ReadNoteCommand, Result<Re
             NoteId = note.Id,
             Content = note.Content,
             Destroyed = note.DeleteAfter == DeleteAfter.Viewing,
+            ClientMetadata = note.ClientMetadata,
         });
     }
 }

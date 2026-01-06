@@ -10,6 +10,7 @@ public class ReadNoteHttpResponseBody
     public required NoteId NoteId { get; init; }
     public required string Content { get; init; }
     public required bool Destroyed { get; init; }
+    public string? ClientMetadata { get; init; }
 }
 
 public static class ReadNoteHttpEndpoint
@@ -59,6 +60,7 @@ public static class ReadNoteHttpEndpoint
             NoteId = commandResponse.NoteId,
             Content = commandResponse.Content,
             Destroyed = commandResponse.Destroyed,
+            ClientMetadata = commandResponse.ClientMetadata,
         });
     }
 

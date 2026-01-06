@@ -61,7 +61,6 @@ import type { NoteId } from "@/modules/notes/models";
 import { appBaseUrl, getAppRoute } from "@/router";
 import axios from "axios";
 import { computed, ref, type Ref } from "vue";
-import type { VBtn } from "vuetify/components";
 
 const visible = defineModel<boolean>({ default: false, required: true });
 
