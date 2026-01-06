@@ -1,10 +1,10 @@
 <template>
-  <v-dialog v-model="visible" width="600px">
+  <v-dialog v-model="visible" :persistent="persistent" width="600px">
     <v-card>
       <v-card-title class="d-flex justify-content-between">
-        {{ title }}
+        {{ title ?? "" }}
         <v-spacer></v-spacer>
-        <v-btn icon variant="flat">
+        <v-btn v-if="showCloseButton" icon variant="flat">
           <v-icon @click="closePopup">mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -23,8 +23,8 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn color="darkgray" @click="closePopup">Cancel</v-btn>
-        <v-btn color="success" @click="onSubmitBtnClicked">Submit</v-btn>
+        <v-btn v-if="showCancelButton" color="darkgray" @click="closePopup">Cancel</v-btn>
+        <v-btn color="success" @click="onSubmitBtnClicked">{{ submitButtonText }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -35,11 +35,15 @@ import { ref, type Ref } from "vue";
 
 const visible = defineModel<boolean>({ default: false, required: true });
 
-defineProps<{
-  title: string;
-  text?: string;
-  fieldLabel: string;
-}>();
+defineProps({
+  title: { type: String, required: false },
+  text: { type: String, required: false },
+  fieldLabel: { type: String, required: false },
+  submitButtonText: { type: String, required: false, default: "Submit" },
+  showCancelButton: { type: Boolean, required: false, default: true },
+  showCloseButton: { type: Boolean, required: false, default: true },
+  persistent: { type: Boolean, required: false, default: false },
+});
 
 export interface PasswordEntryPopupSubmitEvent {
   password: string | null;

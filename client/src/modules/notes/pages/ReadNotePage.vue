@@ -19,6 +19,9 @@
     </v-row>
     <PasswordEntryPopup
       v-model="accessPasswordPopupVisible"
+      :show-close-button="false"
+      :show-cancel-button="false"
+      :persistent="true"
       title="Enter Access Password"
       text="This note is password-protected, please enter the access password."
       field-label="Access Password"
@@ -26,9 +29,13 @@
     />
     <PasswordEntryPopup
       v-model="encryptionPasswordPopupVisible"
+      :show-close-button="false"
+      :show-cancel-button="false"
+      :persistent="true"
       title="Enter Encryption Password"
       text="This note is encrypted, please enter the encryption password."
       field-label="Encryption Password"
+      submit-button-text="Decrypt"
       @submit="onEncryptionPasswordEntryPopupSubmitted"
     />
   </v-container>
