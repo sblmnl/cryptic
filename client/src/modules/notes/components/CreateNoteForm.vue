@@ -103,7 +103,7 @@ import { createNote, type CreateNoteHttpRequest, type CreateNoteHttpResponse } f
 import { getAppRoute } from "@/router";
 import axios from "axios";
 import { reactive, ref, type Ref } from "vue";
-import type { VBtn, VForm } from "vuetify/components";
+import type { VForm } from "vuetify/components";
 
 const emit = defineEmits<{
   saveSuccess: [CreateNoteHttpResponse];
@@ -152,7 +152,7 @@ async function submit(e: Event) {
     content: note.content,
     deleteAfter: formData.deleteAfter.value,
     password: formData.accessPassword.length > 0 ? formData.accessPassword : undefined,
-    clientMetadata: JSON.stringify(note.clientMetdata, uint8ArrayToBase64Replacer),
+    clientMetadata: JSON.stringify(note.clientMetadata, uint8ArrayToBase64Replacer),
   };
 
   try {

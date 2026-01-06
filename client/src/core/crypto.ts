@@ -8,7 +8,7 @@ export interface Argon2DifficultyOptions {
 
 export interface Argon2PublicOptions extends Argon2DifficultyOptions {
   type: ArgonType;
-  salt: Uint8Array;
+  salt: Uint8Array | string;
 }
 
 export function createArgon2PublicOptions(
@@ -59,7 +59,7 @@ export type PaddingMode = "pkcs7";
 export type SymmetricEncryptionAlgorithm = "aes-cbc";
 
 export interface AesCbcParameters {
-  iv: Uint8Array;
+  iv: Uint8Array | string;
   keyLen: 16 | 32;
   paddingMode: PaddingMode;
 }
@@ -91,4 +91,14 @@ export async function aesCbcEncrypt(data: Uint8Array, key: Uint8Array, iv: Uint8
   const cipherText = await crypto.subtle.encrypt({ name: "aes-cbc", iv: ivBuf }, cryptoKey, dataBuf);
 
   return Buffer.from(cipherText);
+}
+
+export async function aesCbcDecrypt(data: Uint8Array, key: Uint8Array, iv: Uint8Array) {
+  const cryptoKey = await importAesCbcKey(key);
+  const dataBuf = Buffer.from(data);
+  const ivBuf = Buffer.from(iv);
+
+  const plainText = await crypto.subtle.decrypt({ name: "aes-cbc", iv: ivBuf }, cryptoKey, dataBuf);
+
+  return Buffer.from(plainText);
 }

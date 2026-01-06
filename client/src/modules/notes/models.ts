@@ -1,4 +1,5 @@
 import {
+  aesCbcDecrypt,
   aesCbcEncrypt,
   StandardArgon2Options,
   type AesCbcParameters,
@@ -17,7 +18,7 @@ export interface NoteClientMetadata {
 
 export interface Note {
   content: string;
-  clientMetdata?: NoteClientMetadata;
+  clientMetadata?: NoteClientMetadata;
 }
 
 export async function createNote(content: string, encryptionPassword?: string): Promise<Note> {
@@ -42,16 +43,41 @@ export async function createNote(content: string, encryptionPassword?: string): 
   };
 
   const plainText = Buffer.from(content, "utf16le");
-  const cipherText = await aesCbcEncrypt(plainText, derivedKey.hash, encryptionOptions.params.iv);
+  const cipherText = await aesCbcEncrypt(plainText, derivedKey.hash, encryptionOptions.params.iv as Uint8Array);
 
   return {
     content: cipherText.toString("base64"),
-    clientMetdata: {
+    clientMetadata: {
       clientName: import.meta.env.VITE_CLIENT_NAME,
       clientVersion: import.meta.env.VITE_CLIENT_VERSION,
       encryptionOptions,
     },
   };
+}
+
+export async function decryptNote(note: Note, encryptionPassword: string): Promise<string> {
+  const encryptionOptions = note.clientMetadata?.encryptionOptions as SymmetricEncryptionMetadata<
+    AesCbcParameters,
+    Argon2PublicOptions
+  >;
+
+  const salt = encryptionOptions.kdf!.params.salt;
+  const derivedKey = await argon2.hash({
+    ...encryptionOptions.kdf!.params,
+    salt: salt instanceof Uint8Array ? salt : Buffer.from(salt, "base64"),
+    pass: encryptionPassword,
+    hashLen: encryptionOptions.params.keyLen,
+  });
+
+  const cipherText = Buffer.from(note.content, "base64");
+  const iv = encryptionOptions.params.iv;
+  const plainText = await aesCbcDecrypt(
+    cipherText,
+    derivedKey.hash,
+    iv instanceof Uint8Array ? iv : Buffer.from(iv, "base64"),
+  );
+
+  return plainText.toString("utf16le");
 }
 
 export interface CreateNoteHttpRequest {
@@ -64,4 +90,11 @@ export interface CreateNoteHttpRequest {
 export interface CreateNoteHttpResponse {
   noteId: NoteId;
   controlToken: string;
+}
+
+export interface ReadNoteHttpResponse {
+  noteId: NoteId;
+  content: string;
+  destroyed: boolean;
+  clientMetadata: string | null;
 }
