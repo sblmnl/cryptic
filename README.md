@@ -8,7 +8,7 @@ Utility for securely sharing notes over the web
 
 Prerequisites:
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 - [Node.js](https://nodejs.org)
 
 Run the `init.sh` (Linux/Mac) or `init.ps1` (Windows) to initialize the development environment for the project.
