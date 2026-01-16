@@ -29,14 +29,12 @@ import type { ReadNoteHttpResponse } from "@/lib/models/notes/api/read-note";
 import { decryptNote, type Note, type NoteClientMetadata } from "@/lib/models/notes/note";
 import { api } from "@/wrappers/axios";
 import { type AxiosError, isAxiosError } from "axios";
-import { Notify } from "quasar";
+import { Loading, Notify } from "quasar";
 import { validate as validateUuid } from "uuid";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-
-const showSpinner = ref(false);
 
 const noteId = computed(() => route.params.noteId as string);
 
@@ -122,7 +120,7 @@ function detectAndHandleEncryptedNote(clientMetadataString: string | null) {
 
 async function readNote() {
   try {
-    showSpinner.value = true;
+    Loading.show();
 
     const res = await api.post<OkHttpResponseBody<ReadNoteHttpResponse>>(`/notes/${noteId.value}/read`, null, {
       params: {
@@ -130,7 +128,7 @@ async function readNote() {
       },
     });
 
-    showSpinner.value = false;
+    Loading.hide();
 
     if (res.data.data.destroyed) {
       Notify.create({ type: "info", message: "Note destroyed!" });
@@ -143,7 +141,7 @@ async function readNote() {
 
     detectAndHandleEncryptedNote(res.data.data.clientMetadata);
   } catch (err) {
-    showSpinner.value = false;
+    Loading.hide();
 
     if (isAxiosError<FailedHttpResponseBody>(err)) {
       handleAxiosError(err);

@@ -53,7 +53,7 @@ export default defineConfig(() => {
       },
     },
     framework: {
-      plugins: ["Notify", "Dialog"],
+      plugins: ["Notify", "Dialog", "Loading"],
       config: {
         notify: {},
         dark: "auto",
