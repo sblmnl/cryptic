@@ -1,23 +1,24 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "./.quasar/tsconfig.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
-
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "#q-app": [
+        "./node_modules/@quasar/app-vite/types/index.d.ts"
+      ],
+      "#q-app/wrappers": [
+        "./node_modules/@quasar/app-vite/types/app-wrappers.d.ts"
+      ],
+      "#q-app/bex/background": [
+        "./node_modules/@quasar/app-vite/types/bex/entrypoints/background.d.ts"
+      ],
+      "#q-app/bex/content": [
+        "./node_modules/@quasar/app-vite/types/bex/entrypoints/content.d.ts"
+      ],
+      "#q-app/bex/private/bex-bridge": [
+        "./node_modules/@quasar/app-vite/types/bex/bex-bridge.d.ts"
+      ]
     },
-
-    "target": "es2022",
-    "module": "esnext",
-    "lib": ["es2023", "dom", "dom.iterable"],
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "noEmit": true,
 
     /* Linting */
     "strict": true,
@@ -25,13 +26,7 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "exactOptionalPropertyTypes": false
   },
-  "include": [
-    "vite-env.d.ts",
-    "vite.config.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
-  ]
 }

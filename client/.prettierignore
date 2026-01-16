@@ -1,9 +1,0 @@
-**/node_modules/
-**/dist/
-**/bin/
-**/obj/
-
-**/package.json
-**/package-lock.json
-
-./public/

@@ -19,6 +19,7 @@ fi
 
 cp $https_cert_path .docker/https/
 cp $https_key_path .docker/https/
+chmod 644 .docker/https/*
 
 cat <<EOF > .env
 VITE_APP_PATH_BASE=""

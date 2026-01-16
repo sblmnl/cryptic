@@ -18,8 +18,10 @@ bin/
 obj/
 dist/
 
-# vite
+# quasar/vite
+.quasar/
 .vite/
+quasar.config.*.temporary.compiled*
 
 # packages
 node_modules/
@@ -46,6 +48,7 @@ lerna-debug.log*
 
 # misc
 .DS_Store
+.thumbs.db
 
 # rest client
 *.http
