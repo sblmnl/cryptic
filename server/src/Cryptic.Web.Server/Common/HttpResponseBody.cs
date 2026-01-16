@@ -6,7 +6,6 @@ public abstract record HttpResponseBody(string Status)
     public static HttpResponseBody Ok<T>(T? data) => new OkHttpResponseBody<T>(data);
     public static HttpResponseBody Fail(ICollection<CodedError> errors) => new FailedHttpResponseBody(errors);
     public static HttpResponseBody Fail(CodedError error) => Fail([error]);
-
 }
 
 public record OkHttpResponseBody(object? Data) : HttpResponseBody("ok");

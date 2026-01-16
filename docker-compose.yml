@@ -27,11 +27,12 @@ services:
         VITE_APP_PATH_BASE: "${VITE_APP_PATH_BASE}"
     container_name: cryptic-web
     volumes:
-      - ./.docker/https:/https:ro
+      - ./.docker/https/localhost.pem:/app/localhost.pem:ro
+      - ./.docker/https/localhost.key:/app/localhost.key:ro
     environment:
       - ASPNETCORE_URLS=https://+:5001;http://+:5000
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pem
-      - ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/https/localhost.key
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/localhost.pem
+      - ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/app/localhost.key
       - ConnectionStrings__Database=Server=db;Port=5432;Database=cryptic;User Id=postgres;Password=password
     ports:
       - 5000:5000
