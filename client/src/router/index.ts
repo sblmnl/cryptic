@@ -9,13 +9,13 @@ declare module "vue-router" {
   }
 }
 
-export const appBaseUrl = window.location.protocol + "//" + window.location.host;
-
 export function getAppRoute(rootRelativeRoute: string) {
   return import.meta.env.VITE_ROUTER_BASE
     ? `${import.meta.env.VITE_ROUTER_BASE}${rootRelativeRoute}`
     : rootRelativeRoute;
 }
+
+export const appBaseUrl = `${window.location.protocol}//${window.location.host}${getAppRoute("")}`;
 
 const createHistory = import.meta.env.VITE_ROUTER_MODE === "history" ? createWebHistory : createWebHashHistory;
 

@@ -22,14 +22,22 @@ cp $https_key_path .docker/https/
 chmod 644 .docker/https/*
 
 cat <<EOF > .env
-VITE_APP_PATH_BASE=""
+VITE_APP_NAME="Cryptic"
+VITE_CLIENT_NAME="cryptic"
+VITE_CLIENT_VERSION="0.0.1"
+#VITE_ROUTER_BASE=""
+VITE_ROUTER_MODE="history"
 EOF
 
 cd client
 npm install
 
 cat <<EOF > .env
-VITE_APP_PATH_BASE=""
+VITE_APP_NAME="Cryptic"
+VITE_CLIENT_NAME="cryptic"
+VITE_CLIENT_VERSION="0.0.1"
+#VITE_ROUTER_BASE=""
+VITE_ROUTER_MODE="history"
 EOF
 
 cd ..
