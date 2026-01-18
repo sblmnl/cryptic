@@ -1,12 +1,14 @@
 import { defineConfig } from "#q-app/wrappers";
+import dotenv from "dotenv";
 import path from "path";
-import { env } from "process";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+
+dotenv.config();
 
 export default defineConfig(() => {
   const target = "https://localhost:5001";
 
-  const base = env.VITE_ROUTER_BASE;
+  const base = process.env.VITE_ROUTER_BASE;
   const basePath = base ?? "";
 
   const proxyRoutes = ["/api"];
@@ -19,6 +21,14 @@ export default defineConfig(() => {
   return {
     extras: ["roboto-font", "material-icons"],
     build: {
+      env: {
+        VITE_APP_NAME: process.env.VITE_APP_NAME,
+        VITE_CLIENT_NAME: process.env.VITE_CLIENT_NAME,
+        VITE_CLIENT_VERSION: process.env.VITE_CLIENT_VERSION,
+        VITE_ROUTER_MODE: process.env.VITE_ROUTER_MODE,
+        VITE_ROUTER_BASE: process.env.VITE_ROUTER_BASE,
+      },
+      publicPath: base ? `${base}/` : "/",
       target: {
         browser: ["es2022", "firefox115", "chrome115", "safari14"],
         node: "node20",

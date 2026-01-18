@@ -18,6 +18,13 @@ builder.Services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+string? pathBase = app.Configuration.GetValue<string>("PathBase");
+
+if (!string.IsNullOrWhiteSpace(pathBase))
+{
+    app.UsePathBase(pathBase);
+    app.UseRouting();
+}
 
 app.UseHttpsRedirection();
 

@@ -23,8 +23,6 @@ services:
     build:
       context: .
       dockerfile: ./server/src/Cryptic.Web.Server/Dockerfile
-      args:
-        VITE_APP_PATH_BASE: "${VITE_APP_PATH_BASE}"
     container_name: cryptic-web
     volumes:
       - ./.docker/https/localhost.pem:/app/localhost.pem:ro
