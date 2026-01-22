@@ -1,0 +1,1 @@
+psql -c "DELETE FROM notes WHERE delete_at <= NOW();"

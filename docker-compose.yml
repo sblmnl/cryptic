@@ -41,5 +41,22 @@ services:
     profiles:
       - app
 
+  cron:
+    build:
+      context: ./.docker/cron
+      dockerfile: Dockerfile
+    container_name: cryptic-cron
+    environment:
+      - PGHOST=db
+      - PGDATABASE=cryptic
+      - PGUSER=postgres
+      - PGPASSWORD=password
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+      - app
+      - ""
+
 volumes:
   cryptic-db: {}
