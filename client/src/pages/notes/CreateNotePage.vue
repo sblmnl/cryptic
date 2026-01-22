@@ -1,6 +1,10 @@
 <template>
-  <q-page class="q-pa-md">
-    <CreateNoteForm @save-success="onSaveSuccess" @save-failed="onSaveFailed" />
+  <q-page class="column q-pa-md">
+    <div class="col row justify-center">
+      <div class="col-lg-6 col-sm-9 col-xs-12">
+        <CreateNoteForm @save-success="onSaveSuccess" @save-failed="onSaveFailed" />
+      </div>
+    </div>
     <NoteCreatedPopup
       v-model="noteCreatedPopupVisible"
       :note-id="createdNoteId"

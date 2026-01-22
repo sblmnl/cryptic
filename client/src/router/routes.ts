@@ -2,16 +2,17 @@ import type { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
   {
-    path: "/",
-    component: () => import("@/pages/HomePage.vue"),
-  },
-  {
+    alias: "/",
     path: "/notes",
     component: () => import("@/pages/notes/CreateNotePage.vue"),
   },
   {
     path: "/notes/:noteId",
     component: () => import("@/pages/notes/ReadNotePage.vue"),
+  },
+  {
+    path: "/contribute",
+    component: () => import("@/pages/ContributePage.vue"),
   },
   {
     path: "/:catchAll(.*)",
