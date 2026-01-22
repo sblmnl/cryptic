@@ -52,6 +52,10 @@ namespace Cryptic.Core.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("delete_after");
 
+                    b.Property<DateTime>("DeleteAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("delete_at");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text")
                         .HasColumnName("password_hash");

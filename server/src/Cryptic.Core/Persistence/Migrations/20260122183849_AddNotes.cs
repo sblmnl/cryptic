@@ -18,6 +18,7 @@ namespace Cryptic.Core.Persistence.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     content = table.Column<string>(type: "character varying(16384)", maxLength: 16384, nullable: false),
                     delete_after = table.Column<int>(type: "integer", nullable: false),
+                    delete_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     control_token_hash = table.Column<string>(type: "text", nullable: false),
                     password_hash = table.Column<string>(type: "text", nullable: true),
                     client_metadata = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
@@ -27,13 +28,6 @@ namespace Cryptic.Core.Persistence.Migrations
                 {
                     table.PrimaryKey("pk_notes", x => x.id);
                 });
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "notes");
         }
     }
 }

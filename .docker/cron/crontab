@@ -1,0 +1,2 @@
+# Delete all expired notes from the database every 30 minutes
+*/1 * * * * /app/scripts/vacuum-notes

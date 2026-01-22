@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cryptic.Core.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251121155530_AddNotes")]
+    [Migration("20260122183849_AddNotes")]
     partial class AddNotes
     {
         /// <inheritdoc />
@@ -54,6 +54,10 @@ namespace Cryptic.Core.Persistence.Migrations
                     b.Property<int>("DeleteAfter")
                         .HasColumnType("integer")
                         .HasColumnName("delete_after");
+
+                    b.Property<DateTime>("DeleteAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("delete_at");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text")

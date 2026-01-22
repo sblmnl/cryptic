@@ -13,6 +13,7 @@ public class Note
     public NoteId Id { get; } = NoteId.New();
     public required string Content { get; init; }
     public required DeleteAfter DeleteAfter { get; init; }
+    public required DateTime DeleteAt { get; init; }
     public required ControlTokenHash ControlTokenHash { get; init; }
     public PasswordHash? PasswordHash { get; init; }
     public string? ClientMetadata { get; init; }
@@ -35,7 +36,7 @@ public class Note
         return Result.Ok();
     }
 
-    public bool HasDeleteAfterPassed() => DateTime.UtcNow > CreatedAt.Add(DeleteAfter.ToTimeSpan());
+    public bool HasDeleteAfterPassed() => DateTime.UtcNow > DeleteAt;
 
     public static Result<Note> Create(
         string content,
@@ -59,13 +60,17 @@ public class Note
             return Result.Fail(new NoteClientMetadataTooLongError());
         }
 
+        var now = DateTime.UtcNow;
+
         return Result.Ok(new Note
         {
             Content = content,
             DeleteAfter = deleteAfter,
+            DeleteAt = now.Add(deleteAfter.ToTimeSpan()),
             ControlTokenHash = controlTokenHash,
             PasswordHash = passwordHash,
             ClientMetadata = clientMetadata,
+            CreatedAt = now,
         });
     }
 }
