@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="visible">
-    <q-card style="width: 600px">
+    <q-card style="width: 600px" class="no-shadow">
       <q-card-section
         :class="[
           'row',
@@ -10,10 +10,9 @@
           'q-pb-none',
         ]"
       >
-        <div>
-          <div :class="['text-h6']">Your note has been created!</div>
-        </div>
-        <q-btn icon="close" round unelevated @click="close" />
+        <div class="text-h6">Your note has been created!</div>
+        <q-space />
+        <q-btn v-close-popup icon="eva-close-outline" flat round dense />
       </q-card-section>
 
       <q-card-section class="column q-col-gutter-md q-pt-sm q-px-md">
@@ -31,7 +30,7 @@
         >
           <template #append>
             <q-icon
-              :name="hideControlToken ? 'visibility' : 'visibility_off'"
+              :name="hideControlToken ? 'eva-eye-outline' : 'eva-eye-off-outline'"
               class="cursor-pointer"
               @click="hideControlToken = !hideControlToken"
             />
@@ -41,10 +40,14 @@
       </q-card-section>
 
       <q-card-actions align="between" class="q-px-md q-pb-md">
-        <q-btn color="negative" style="width: 96px" flat @click="onDestroyBtnClick">
-          <q-spinner v-if="noteDestructionInProgress" />
-          <span v-else>Destroy</span>
-        </q-btn>
+        <q-btn
+          :loading="noteDestructionInProgress"
+          color="negative"
+          label="Destroy"
+          style="width: 96px"
+          flat
+          @click="onDestroyBtnClick"
+        />
         <q-btn label="Ok" color="positive" unelevated @click="onOkBtnClick" />
       </q-card-actions>
     </q-card>
@@ -52,11 +55,11 @@
 </template>
 
 <script setup lang="ts">
+import { api } from "@/boot/axios";
 import type { CodedError } from "@/lib/common";
 import type { FailedHttpResponseBody } from "@/lib/models/api";
 import { sleep } from "@/lib/util/time";
 import { appBaseUrl } from "@/router";
-import { api } from "@/wrappers/axios";
 import { isAxiosError } from "axios";
 import { computed, ref } from "vue";
 
@@ -75,8 +78,8 @@ const emit = defineEmits<{
 const noteUrl = computed(() => `${appBaseUrl}/notes/${props.noteId}`);
 
 const hideControlToken = ref(true);
-const copyNoteUrlIcon = ref<"content_copy" | "check">("content_copy");
-const copyControlTokenIcon = ref<"content_copy" | "check">("content_copy");
+const copyNoteUrlIcon = ref<"eva-copy-outline" | "eva-checkmark-outline">("eva-copy-outline");
+const copyControlTokenIcon = ref<"eva-copy-outline" | "eva-checkmark-outline">("eva-copy-outline");
 
 const noteDestructionInProgress = ref(false);
 
@@ -85,25 +88,25 @@ function close() {
 }
 
 async function onCopyNoteUrlBtnClick() {
-  if (copyNoteUrlIcon.value === "check") {
+  if (copyNoteUrlIcon.value === "eva-checkmark-outline") {
     return;
   }
 
   await navigator.clipboard.writeText(noteUrl.value);
-  copyNoteUrlIcon.value = "check";
+  copyNoteUrlIcon.value = "eva-checkmark-outline";
   await sleep(500);
-  copyNoteUrlIcon.value = "content_copy";
+  copyNoteUrlIcon.value = "eva-copy-outline";
 }
 
 async function onCopyControlTokenBtnClick() {
-  if (copyControlTokenIcon.value === "check") {
+  if (copyControlTokenIcon.value === "eva-checkmark-outline") {
     return;
   }
 
   await navigator.clipboard.writeText(props.controlToken);
-  copyControlTokenIcon.value = "check";
+  copyControlTokenIcon.value = "eva-checkmark-outline";
   await sleep(500);
-  copyControlTokenIcon.value = "content_copy";
+  copyControlTokenIcon.value = "eva-copy-outline";
 }
 
 function onOkBtnClick() {

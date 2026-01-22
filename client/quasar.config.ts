@@ -19,19 +19,35 @@ export default defineConfig(() => {
   });
 
   return {
-    extras: ["roboto-font", "material-icons"],
+    boot: ["quasar-defaults", "dark-mode", "axios"],
+    extras: ["eva-icons", "fontawesome-v6"],
+    framework: {
+      plugins: ["Notify", "Dialog", "Loading", "Dark"],
+      config: {
+        notify: {},
+        dark: "auto",
+      },
+      iconSet: "eva-icons",
+    },
+    css: ["typography.scss", "app.scss"],
     build: {
+      publicPath: base ? `${base}/` : "/",
       env: {
         VITE_APP_NAME: process.env.VITE_APP_NAME,
         VITE_CLIENT_NAME: process.env.VITE_CLIENT_NAME,
         VITE_CLIENT_VERSION: process.env.VITE_CLIENT_VERSION,
         VITE_ROUTER_MODE: process.env.VITE_ROUTER_MODE,
         VITE_ROUTER_BASE: process.env.VITE_ROUTER_BASE,
+        VITE_GITHUB_REPO_URL: process.env.VITE_GITHUB_REPO_URL,
+        VITE_DONATE_KOFI_URL: process.env.VITE_DONATE_KOFI_URL,
+        VITE_DONATE_MONERO_ADDRESS: process.env.VITE_DONATE_MONERO_ADDRESS,
       },
-      publicPath: base ? `${base}/` : "/",
       target: {
         browser: ["es2022", "firefox115", "chrome115", "safari14"],
         node: "node20",
+      },
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
       },
       typescript: {
         strict: true,
@@ -58,16 +74,6 @@ export default defineConfig(() => {
           },
         }),
       ],
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-    },
-    framework: {
-      plugins: ["Notify", "Dialog", "Loading"],
-      config: {
-        notify: {},
-        dark: "auto",
-      },
     },
     devServer: {
       port: 5173,

@@ -1,8 +1,27 @@
 <template>
-  <q-page class="q-pa-md">
-    <div class="row justify-center">
-      <div class="col-xl-6 col-sm-9 col-xs-12">
-        <q-input :model-value="note.content" rows="16" type="textarea" outlined readonly />
+  <q-page class="column q-pa-md">
+    <div class="col row justify-center">
+      <div class="col-lg-6 col-sm-9 col-xs-12">
+        <div class="column full-height full-width">
+          <div class="col-xs col-md-6">
+            <q-input
+              :model-value="note.content"
+              rows="16"
+              type="textarea"
+              class="full-height"
+              input-class="full-height"
+              outlined
+              readonly
+            >
+              <template #append>
+                <q-icon v-if="note.content.length > 0" name="eva-copy-outline" />
+              </template>
+            </q-input>
+          </div>
+          <div class="row items-center justify-end q-mt-sm">
+            <q-btn to="/notes" label="Create a new note" color="positive" unelevated />
+          </div>
+        </div>
       </div>
     </div>
     <PasswordEntryPopup
@@ -16,6 +35,7 @@
       v-model="showEncryptionPwdPopup"
       title="Enter Encryption Password"
       field-label="Encryption Password"
+      submit-btn-text="Decrypt"
       persistent
       @submit="onEncryptionPwdPopupSubmit"
     />
@@ -23,11 +43,11 @@
 </template>
 
 <script setup lang="ts">
+import { api } from "@/boot/axios";
 import PasswordEntryPopup, { type PasswordEntryPopupSubmitEvent } from "@/components/PasswordEntryPopup.vue";
 import type { FailedHttpResponseBody, OkHttpResponseBody } from "@/lib/models/api";
 import type { ReadNoteHttpResponse } from "@/lib/models/notes/api/read-note";
 import { decryptNote, type Note, type NoteClientMetadata } from "@/lib/models/notes/note";
-import { api } from "@/wrappers/axios";
 import { type AxiosError, isAxiosError } from "axios";
 import { Loading, Notify } from "quasar";
 import { validate as validateUuid } from "uuid";
@@ -63,6 +83,7 @@ async function onEncryptionPwdPopupSubmit(e: PasswordEntryPopupSubmitEvent) {
     Notify.create({ type: "positive", message: "Note decrypted!" });
   } catch {
     Notify.create({ type: "negative", message: "Incorrect encryption password!" });
+    showEncryptionPwdPopup.value = true;
   }
 }
 
@@ -161,3 +182,9 @@ onMounted(async () => {
   await readNote();
 });
 </script>
+
+<style scoped>
+:deep(.q-textarea .q-field__control) {
+  height: 100% !important;
+}
+</style>
