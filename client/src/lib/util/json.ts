@@ -1,3 +1,6 @@
 export function uint8ArrayToBase64Replacer(_key: string, value: any) {
-  return value instanceof Uint8Array ? Buffer.from(value).toString("base64") : value;
+  if (!(value instanceof Uint8Array)) return value;
+  let str = "";
+  for (const byte of value) str += String.fromCharCode(byte);
+  return btoa(str);
 }

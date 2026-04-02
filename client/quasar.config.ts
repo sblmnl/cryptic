@@ -1,7 +1,6 @@
 import { defineConfig } from "#q-app/wrappers";
 import dotenv from "dotenv";
 import path from "path";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 dotenv.config();
 
@@ -66,13 +65,6 @@ export default defineConfig(() => {
           },
           { server: false },
         ],
-        nodePolyfills({
-          globals: {
-            Buffer: true,
-            global: true,
-            process: true,
-          },
-        }),
       ],
     },
     devServer: {

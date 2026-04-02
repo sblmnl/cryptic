@@ -1,4 +1,10 @@
-import { ArgonType, type Argon2BrowserHashOptions } from "argon2-browser/dist/argon2-bundled.min.js";
+export const ArgonType = {
+  Argon2d: 0,
+  Argon2i: 1,
+  Argon2id: 2,
+} as const;
+
+export type ArgonType = (typeof ArgonType)[keyof typeof ArgonType];
 
 export interface Argon2DifficultyOptions {
   time: number;
@@ -16,7 +22,7 @@ export function createArgon2PublicOptions(
   mem: number,
   parallelism: number,
   saltLen = 16,
-  type = ArgonType.Argon2id,
+  type: ArgonType = ArgonType.Argon2id,
 ): Argon2PublicOptions {
   return {
     type,
@@ -33,16 +39,4 @@ export abstract class StandardArgon2Options {
   static owaspBalanced = (saltLen = 16) => createArgon2PublicOptions(3, 12_288, 1, saltLen);
   static owaspSomewhatCpuIntensive = (saltLen = 16) => createArgon2PublicOptions(4, 9_216, 1, saltLen);
   static owaspMostCpuIntensive = (saltLen = 16) => createArgon2PublicOptions(5, 7_168, 1, saltLen);
-}
-
-export function createArgon2Options(
-  pass: string,
-  difficulty: Argon2DifficultyOptions,
-  saltLength = 16,
-): Argon2BrowserHashOptions {
-  return {
-    pass,
-    salt: crypto.getRandomValues(new Uint8Array(saltLength)),
-    ...difficulty,
-  };
 }
