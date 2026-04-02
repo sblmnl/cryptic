@@ -1,0 +1,10 @@
+global using Cryptic.Core.Common;
+global using Cryptic.Core.Common.Errors;
+global using Cryptic.Core.Cryptography;
+global using Cryptic.Core.Notes;
+global using Cryptic.Core.Notes.Commands;
+global using Cryptic.Core.Notes.Errors;
+global using Cryptic.Core.Persistence;
+global using Cryptic.Core.Tests.Helpers;
+global using FluentResults;
+global using Xunit;

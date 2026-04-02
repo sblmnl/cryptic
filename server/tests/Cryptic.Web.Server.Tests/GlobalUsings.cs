@@ -1,0 +1,12 @@
+global using Cryptic.Core.Common;
+global using Cryptic.Core.Common.Errors;
+global using Cryptic.Core.Notes;
+global using Cryptic.Core.Notes.Commands;
+global using Cryptic.Core.Notes.Errors;
+global using Cryptic.Web.Server.Common;
+global using Cryptic.Web.Server.Common.Errors;
+global using Cryptic.Web.Server.Notes.Endpoints;
+global using FluentResults;
+global using LiteBus.Commands.Abstractions;
+global using Moq;
+global using Xunit;

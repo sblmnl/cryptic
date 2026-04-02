@@ -33,6 +33,11 @@
   </Target>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Cryptic.Web.Server.Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Cryptic.Core\Cryptic.Core.csproj" />
   </ItemGroup>
 
