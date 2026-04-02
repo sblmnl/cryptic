@@ -46,6 +46,11 @@ lerna-debug.log*
 *.sln.docstates
 *.userprefs
 
+# playwright
+playwright-report/
+blob-report/
+test-results/
+
 # misc
 .DS_Store
 .thumbs.db
