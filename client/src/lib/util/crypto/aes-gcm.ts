@@ -4,25 +4,25 @@ export interface AesGcmParameters {
 }
 
 export async function importAesGcmKey(key: Uint8Array) {
-  return crypto.subtle.importKey("raw", Buffer.from(key), "AES-GCM", true, ["encrypt", "decrypt"]);
+  return crypto.subtle.importKey("raw", new Uint8Array(key), "AES-GCM", true, ["encrypt", "decrypt"]);
 }
 
-export async function aesGcmEncrypt(data: Uint8Array, key: Uint8Array, iv: Uint8Array) {
+export async function aesGcmEncrypt(data: Uint8Array, key: Uint8Array, iv: Uint8Array): Promise<Uint8Array> {
   const cryptoKey = await importAesGcmKey(key);
-  const dataBuf = Buffer.from(data);
-  const ivBuf = Buffer.from(iv);
-
-  const cipherText = await crypto.subtle.encrypt({ name: "AES-GCM", iv: ivBuf }, cryptoKey, dataBuf);
-
-  return Buffer.from(cipherText);
+  const cipherText = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv: new Uint8Array(iv) },
+    cryptoKey,
+    new Uint8Array(data),
+  );
+  return new Uint8Array(cipherText);
 }
 
-export async function aesGcmDecrypt(data: Uint8Array, key: Uint8Array, iv: Uint8Array) {
+export async function aesGcmDecrypt(data: Uint8Array, key: Uint8Array, iv: Uint8Array): Promise<Uint8Array> {
   const cryptoKey = await importAesGcmKey(key);
-  const dataBuf = Buffer.from(data);
-  const ivBuf = Buffer.from(iv);
-
-  const plainText = await crypto.subtle.decrypt({ name: "AES-GCM", iv: ivBuf }, cryptoKey, dataBuf);
-
-  return Buffer.from(plainText);
+  const plainText = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: new Uint8Array(iv) },
+    cryptoKey,
+    new Uint8Array(data),
+  );
+  return new Uint8Array(plainText);
 }

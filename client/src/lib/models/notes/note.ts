@@ -1,7 +1,8 @@
 import { aesGcmDecrypt, aesGcmEncrypt, type AesGcmParameters } from "@/lib/util/crypto/aes-gcm";
 import { StandardArgon2Options, type Argon2PublicOptions } from "@/lib/util/crypto/argon2";
 import type { SymmetricEncryptionMetadata } from "@/lib/util/crypto/metadata";
-import * as argon2 from "argon2-browser/dist/argon2-bundled.min.js";
+import { base64ToUint8, decodeUtf16le, encodeUtf16le, uint8ToBase64 } from "@/lib/util/encoding";
+import sodium from "libsodium-wrappers-sumo";
 import * as uuid from "uuid";
 
 export type NoteId = Guid;
@@ -26,8 +27,17 @@ export async function createNote(content: string, encryptionPassword?: string): 
     };
   }
 
+  await sodium.ready;
+
   const hashOptions = StandardArgon2Options.owaspMostCpuIntensive();
-  const derivedKey = await argon2.hash({ ...hashOptions, pass: encryptionPassword, hashLen: 32 });
+  const derivedKey = sodium.crypto_pwhash(
+    32,
+    encryptionPassword,
+    hashOptions.salt as Uint8Array,
+    hashOptions.time,
+    hashOptions.mem * 1024,
+    sodium.crypto_pwhash_ALG_ARGON2ID13,
+  );
 
   const encryptionOptions: SymmetricEncryptionMetadata<AesGcmParameters, Argon2PublicOptions> = {
     alg: "aes-gcm",
@@ -41,12 +51,12 @@ export async function createNote(content: string, encryptionPassword?: string): 
     },
   };
 
-  const plainText = Buffer.from(content, "utf16le");
-  const cipherText = await aesGcmEncrypt(plainText, derivedKey.hash, encryptionOptions.params.iv as Uint8Array);
+  const plainText = encodeUtf16le(content);
+  const cipherText = await aesGcmEncrypt(plainText, derivedKey, encryptionOptions.params.iv as Uint8Array);
 
   return {
     id: uuid.NIL,
-    content: cipherText.toString("base64"),
+    content: uint8ToBase64(cipherText),
     clientMetadata: {
       clientName: import.meta.env.VITE_CLIENT_NAME,
       clientVersion: import.meta.env.VITE_CLIENT_VERSION,
@@ -56,26 +66,29 @@ export async function createNote(content: string, encryptionPassword?: string): 
 }
 
 export async function decryptNote(note: Note, encryptionPassword: string): Promise<string> {
+  await sodium.ready;
+
   const encryptionOptions = note.clientMetadata?.encryptionOptions as SymmetricEncryptionMetadata<
     AesGcmParameters,
     Argon2PublicOptions
   >;
 
   const salt = encryptionOptions.kdf!.params.salt;
-  const derivedKey = await argon2.hash({
-    ...encryptionOptions.kdf!.params,
-    salt: salt instanceof Uint8Array ? salt : Buffer.from(salt, "base64"),
-    pass: encryptionPassword,
-    hashLen: encryptionOptions.params.keyLen,
-  });
+  const saltBytes = salt instanceof Uint8Array ? salt : base64ToUint8(salt);
 
-  const cipherText = Buffer.from(note.content, "base64");
-  const iv = encryptionOptions.params.iv;
-  const plainText = await aesGcmDecrypt(
-    cipherText,
-    derivedKey.hash,
-    iv instanceof Uint8Array ? iv : Buffer.from(iv, "base64"),
+  const derivedKey = sodium.crypto_pwhash(
+    encryptionOptions.params.keyLen,
+    encryptionPassword,
+    saltBytes,
+    encryptionOptions.kdf!.params.time,
+    encryptionOptions.kdf!.params.mem * 1024,
+    sodium.crypto_pwhash_ALG_ARGON2ID13,
   );
 
-  return plainText.toString("utf16le");
+  const cipherText = base64ToUint8(note.content);
+  const iv = encryptionOptions.params.iv;
+  const ivBytes = iv instanceof Uint8Array ? iv : base64ToUint8(iv);
+  const plainText = await aesGcmDecrypt(cipherText, derivedKey, ivBytes);
+
+  return decodeUtf16le(plainText);
 }
