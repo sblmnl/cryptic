@@ -1,4 +1,4 @@
-import type { CodedError } from "@/lib/common/errors";
+import type { CodedError } from "@/shared/types/error";
 
 export interface HttpResponseBody {
   status: "ok" | "failed";

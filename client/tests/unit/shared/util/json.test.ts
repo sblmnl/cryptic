@@ -1,5 +1,5 @@
+import { uint8ArrayToBase64Replacer } from "@/shared/util/json";
 import { describe, expect, it } from "vitest";
-import { uint8ArrayToBase64Replacer } from "@/lib/util/json";
 
 describe("uint8ArrayToBase64Replacer", () => {
   it("passes through non-Uint8Array values unchanged", () => {

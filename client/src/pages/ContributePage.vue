@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { sleep } from "@/lib/util/time";
+import { sleep } from "@/shared/util/time";
 import { Dark } from "quasar";
 import { ref } from "vue";
 

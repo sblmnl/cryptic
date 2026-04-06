@@ -151,13 +151,16 @@
 </template>
 
 <script setup lang="ts">
-import { api } from "@/boot/axios";
-import { DeleteAfter } from "@/lib/common";
-import type { CodedError } from "@/lib/common/errors";
-import type { FailedHttpResponseBody, OkHttpResponseBody } from "@/lib/models/api";
-import type { CreateNoteHttpRequest, CreateNoteHttpResponse } from "@/lib/models/notes/api/create-note";
-import { createNote, type Note } from "@/lib/models/notes/note";
-import { uint8ArrayToBase64Replacer } from "@/lib/util/json";
+import {
+  sendCreateNoteRequest,
+  type CreateNoteHttpRequest,
+  type CreateNoteHttpResponse,
+} from "@/features/notes/api/create-note";
+import { createNote, type Note } from "@/features/notes/note";
+import type { FailedHttpResponseBody } from "@/shared/api/http-response-body";
+import DeleteAfter from "@/shared/types/delete-after";
+import type { CodedError } from "@/shared/types/error";
+import { uint8ArrayToBase64Replacer } from "@/shared/util/json";
 import { isAxiosError } from "axios";
 import type { QForm } from "quasar";
 import { nextTick, reactive, ref, watch } from "vue";
@@ -232,9 +235,9 @@ async function onCreateBtnClick() {
   };
 
   try {
-    const res = await api.post<OkHttpResponseBody<CreateNoteHttpResponse>>("/notes", reqBody);
+    const data = await sendCreateNoteRequest(reqBody);
     await resetForm();
-    emit("saveSuccess", res.data.data);
+    emit("saveSuccess", data);
   } catch (err) {
     emit("saveFailed", isAxiosError<FailedHttpResponseBody>(err) ? (err.response?.data.errors ?? []) : []);
   }

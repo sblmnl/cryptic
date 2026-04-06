@@ -55,11 +55,11 @@
 </template>
 
 <script setup lang="ts">
-import { api } from "@/boot/axios";
-import type { CodedError } from "@/lib/common";
-import type { FailedHttpResponseBody } from "@/lib/models/api";
-import { sleep } from "@/lib/util/time";
+import { sendDestroyNoteRequest } from "@/features/notes/api/destroy-note";
 import { appBaseUrl } from "@/router";
+import type { FailedHttpResponseBody } from "@/shared/api/http-response-body";
+import type { CodedError } from "@/shared/types/error";
+import { sleep } from "@/shared/util/time";
 import { isAxiosError } from "axios";
 import { computed, ref } from "vue";
 
@@ -117,11 +117,7 @@ async function onDestroyBtnClick() {
   noteDestructionInProgress.value = true;
 
   try {
-    await api.delete(`/notes/${props.noteId}`, {
-      params: {
-        controlToken: props.controlToken,
-      },
-    });
+    await sendDestroyNoteRequest(props.noteId, props.controlToken);
 
     emit("destroySuccess");
   } catch (err) {

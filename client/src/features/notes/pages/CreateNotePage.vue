@@ -16,13 +16,13 @@
 </template>
 
 <script setup lang="ts">
-import CreateNoteForm from "@/components/notes/CreateNoteForm.vue";
-import NoteCreatedPopup from "@/components/notes/NoteCreatedPopup.vue";
-import type { CodedError } from "@/lib/common";
-import type { CreateNoteHttpResponse } from "@/lib/models/notes/api/create-note";
-import type { NoteId } from "@/lib/models/notes/note";
+import type { CodedError } from "@/shared/types/error";
 import { Notify } from "quasar";
 import { ref } from "vue";
+import type { CreateNoteHttpResponse } from "../api/create-note";
+import CreateNoteForm from "../components/CreateNoteForm.vue";
+import NoteCreatedPopup from "../components/NoteCreatedPopup.vue";
+import type { NoteId } from "../note";
 
 const createdNoteId = ref<NoteId>("");
 const createdNoteControlToken = ref("");

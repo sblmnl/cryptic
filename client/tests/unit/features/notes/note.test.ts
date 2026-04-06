@@ -1,5 +1,5 @@
+import { base64ToUint8, uint8ToBase64 } from "@/shared/util/encoding";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { base64ToUint8, uint8ToBase64 } from "@/lib/util/encoding";
 
 // Mock libsodium to avoid slow Argon2 KDF in tests.
 // Returns a deterministic 32-byte key derived from the password string.
@@ -21,7 +21,7 @@ vi.mock("libsodium-wrappers-sumo", () => {
   };
 });
 
-import { createNote, decryptNote, type Note, type NoteClientMetadata } from "@/lib/models/notes/note";
+import { createNote, decryptNote, type Note, type NoteClientMetadata } from "@/features/notes/note";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -73,8 +73,8 @@ describe("createNote", () => {
     const kdf = note.clientMetadata!.encryptionOptions!.kdf!;
 
     expect(kdf.params.type).toBe(2); // Argon2id
-    expect(kdf.params.time).toBe(3);
-    expect(kdf.params.mem).toBe(12_288);
+    expect(kdf.params.time).toBe(5);
+    expect(kdf.params.mem).toBe(7_168);
     expect(kdf.params.parallelism).toBe(1);
     expect(kdf.params.salt).toBeInstanceOf(Uint8Array);
   });

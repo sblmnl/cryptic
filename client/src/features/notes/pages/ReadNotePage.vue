@@ -43,16 +43,15 @@
 </template>
 
 <script setup lang="ts">
-import { api } from "@/boot/axios";
-import PasswordEntryPopup, { type PasswordEntryPopupSubmitEvent } from "@/components/PasswordEntryPopup.vue";
-import type { FailedHttpResponseBody, OkHttpResponseBody } from "@/lib/models/api";
-import type { ReadNoteHttpResponse } from "@/lib/models/notes/api/read-note";
-import { decryptNote, type Note, type NoteClientMetadata } from "@/lib/models/notes/note";
+import type { FailedHttpResponseBody } from "@/shared/api/http-response-body";
+import PasswordEntryPopup, { type PasswordEntryPopupSubmitEvent } from "@/shared/components/PasswordEntryPopup.vue";
 import { type AxiosError, isAxiosError } from "axios";
 import { Loading, Notify } from "quasar";
 import { validate as validateUuid } from "uuid";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
+import { sendReadNoteRequest } from "../api/read-note";
+import { decryptNote, type Note, type NoteClientMetadata } from "../note";
 
 const route = useRoute();
 
@@ -143,24 +142,20 @@ async function readNote() {
   try {
     Loading.show();
 
-    const res = await api.post<OkHttpResponseBody<ReadNoteHttpResponse>>(`/notes/${noteId.value}/read`, null, {
-      params: {
-        password: accessPwd.value,
-      },
-    });
+    const data = await sendReadNoteRequest(noteId.value, accessPwd.value);
 
     Loading.hide();
 
-    if (res.data.data.destroyed) {
+    if (data.destroyed) {
       Notify.create({ type: "info", message: "Note destroyed!" });
     }
 
     Object.assign(note, {
-      id: res.data.data.noteId,
-      content: res.data.data.content,
+      id: data.noteId,
+      content: data.content,
     });
 
-    detectAndHandleEncryptedNote(res.data.data.clientMetadata);
+    detectAndHandleEncryptedNote(data.clientMetadata);
   } catch (err) {
     Loading.hide();
 
