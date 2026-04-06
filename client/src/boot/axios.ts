@@ -1,6 +1,6 @@
 import { defineBoot } from "#q-app/wrappers";
-import { getAppRoute } from "@/router";
 import axios from "axios";
+import { getAppRoute } from "../router";
 
 const api = axios.create({
   baseURL: getAppRoute("/api"),

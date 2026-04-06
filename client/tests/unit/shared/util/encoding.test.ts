@@ -1,5 +1,5 @@
+import { base64ToUint8, decodeUtf16le, encodeUtf16le, uint8ToBase64 } from "@/shared/util/encoding";
 import { describe, expect, it } from "vitest";
-import { base64ToUint8, decodeUtf16le, encodeUtf16le, uint8ToBase64 } from "@/lib/util/encoding";
 
 describe("encodeUtf16le", () => {
   it("encodes an empty string", () => {

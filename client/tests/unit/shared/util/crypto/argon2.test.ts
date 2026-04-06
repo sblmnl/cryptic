@@ -1,9 +1,5 @@
+import { ArgonType, StandardArgon2Options, createArgon2PublicOptions } from "@/shared/util/crypto/argon2";
 import { describe, expect, it } from "vitest";
-import {
-  ArgonType,
-  StandardArgon2Options,
-  createArgon2PublicOptions,
-} from "@/lib/util/crypto/argon2";
 
 describe("ArgonType", () => {
   it("defines the correct enum values", () => {

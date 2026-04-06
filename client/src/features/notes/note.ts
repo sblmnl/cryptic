@@ -1,7 +1,7 @@
-import { aesGcmDecrypt, aesGcmEncrypt, type AesGcmParameters } from "@/lib/util/crypto/aes-gcm";
-import { StandardArgon2Options, type Argon2PublicOptions } from "@/lib/util/crypto/argon2";
-import type { SymmetricEncryptionMetadata } from "@/lib/util/crypto/metadata";
-import { base64ToUint8, decodeUtf16le, encodeUtf16le, uint8ToBase64 } from "@/lib/util/encoding";
+import { aesGcmDecrypt, aesGcmEncrypt, type AesGcmParameters } from "@/shared/util/crypto/aes-gcm";
+import { StandardArgon2Options, type Argon2PublicOptions } from "@/shared/util/crypto/argon2";
+import type { SymmetricEncryptionMetadata } from "@/shared/util/crypto/metadata";
+import { base64ToUint8, decodeUtf16le, encodeUtf16le, uint8ToBase64 } from "@/shared/util/encoding";
 import sodium from "libsodium-wrappers-sumo";
 import * as uuid from "uuid";
 
@@ -29,7 +29,7 @@ export async function createNote(content: string, encryptionPassword?: string): 
 
   await sodium.ready;
 
-  const hashOptions = StandardArgon2Options.owaspMostCpuIntensive();
+  const hashOptions = StandardArgon2Options.owaspBalanced();
   const derivedKey = sodium.crypto_pwhash(
     32,
     encryptionPassword,

@@ -4,11 +4,11 @@ const routes: RouteRecordRaw[] = [
   {
     alias: "/",
     path: "/notes",
-    component: () => import("@/pages/notes/CreateNotePage.vue"),
+    component: () => import("@/features/notes/pages/CreateNotePage.vue"),
   },
   {
     path: "/notes/:noteId",
-    component: () => import("@/pages/notes/ReadNotePage.vue"),
+    component: () => import("@/features/notes/pages/ReadNotePage.vue"),
   },
   {
     path: "/contribute",

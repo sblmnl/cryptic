@@ -1,5 +1,5 @@
+import DeleteAfter from "@/shared/types/delete-after";
 import { describe, expect, it } from "vitest";
-import DeleteAfter from "@/lib/common/delete-after";
 
 describe("DeleteAfter", () => {
   describe("listAll", () => {

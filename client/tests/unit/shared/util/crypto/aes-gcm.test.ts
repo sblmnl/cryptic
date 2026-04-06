@@ -1,5 +1,5 @@
+import { aesGcmDecrypt, aesGcmEncrypt, importAesGcmKey } from "@/shared/util/crypto/aes-gcm";
 import { describe, expect, it } from "vitest";
-import { aesGcmDecrypt, aesGcmEncrypt, importAesGcmKey } from "@/lib/util/crypto/aes-gcm";
 
 describe("importAesGcmKey", () => {
   it("imports a 256-bit key", async () => {

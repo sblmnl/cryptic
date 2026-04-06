@@ -1,5 +1,5 @@
+import { sleep } from "@/shared/util/time";
 import { describe, expect, it, vi } from "vitest";
-import { sleep } from "@/lib/util/time";
 
 describe("sleep", () => {
   it("resolves after the specified duration", async () => {
