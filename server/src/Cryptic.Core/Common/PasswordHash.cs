@@ -30,7 +30,7 @@ public record PasswordHash : DerivedKey<object>
     {
         byte[] passwordBytes = Encoding.Unicode.GetBytes(password);
 
-        var parameters = Argon2Parameters.OwaspMostCpuIntensive();
+        var parameters = Argon2Parameters.OwaspSomewhatBalanced();
         var derivedKey = Argon2DerivedKey.Create(passwordBytes, parameters);
 
         return new()

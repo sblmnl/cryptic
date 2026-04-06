@@ -25,7 +25,7 @@ public record ControlTokenHash : DerivedKey<object>
 
     public static ControlTokenHash Create(ControlToken controlToken)
     {
-        var parameters = Argon2Parameters.OwaspMostCpuIntensive();
+        var parameters = Argon2Parameters.OwaspSomewhatBalanced();
         var derivedKey = Argon2DerivedKey.Create(controlToken.Value, parameters);
 
         return new()
